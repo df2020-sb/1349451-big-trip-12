@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Denis Fomin](https://up.htmlacademy.ru/ecmascript/12/user/1349451).
-* Наставник: `Неизвестно`.
+* Наставник: `Алексей Хапов`.
 
 ---
 
