@@ -1,10 +1,10 @@
-'use strict';
+`use strict`;
 
 const EVENTS_COUNT = 3;
 
-const tripMainElement = document.querySelector('.trip-main');
-const tripControlsElement = document.querySelector('.trip-controls');
-const tripEventsElement = document.querySelector('.trip-events');
+const tripMainElement = document.querySelector(`.trip-main`);
+const tripControlsElement = document.querySelector(`.trip-controls`);
+const tripEventsElement = document.querySelector(`.trip-events`);
 
 const createTripInfoTemplate = () => {
   return (
@@ -348,23 +348,23 @@ const render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
 };
 
-render(tripMainElement, 'afterbegin', createTripInfoTemplate());
-render(tripControlsElement, 'afterbegin', createFiltersTemplate());
-render(tripControlsElement, 'afterbegin', createMenuTemplate());
-render(tripEventsElement, 'beforeend', createSortTemplate());
-render(tripEventsElement, 'beforeend', createEventEditTemplate());
-render(tripEventsElement, 'beforeend', createDaysListTemplate());
+render(tripMainElement, `afterbegin`, createTripInfoTemplate());
+render(tripControlsElement, `afterbegin`, createFiltersTemplate());
+render(tripControlsElement, `afterbegin`, createMenuTemplate());
+render(tripEventsElement, `beforeend`, createSortTemplate());
+render(tripEventsElement, `beforeend`, createEventEditTemplate());
+render(tripEventsElement, `beforeend`, createDaysListTemplate());
 
-const daysListElement = document.querySelector('.trip-days');
-render(daysListElement, 'beforeend', createDayTemplate());
+const daysListElement = document.querySelector(`.trip-days`);
+render(daysListElement, `beforeend`, createDayTemplate());
 
-const dayElement = document.querySelector('.trip-days li');
-render(dayElement, 'beforeend', createDayInfoTemplate());
-render(dayElement, 'beforeend', createEventsListTemplate());
+const dayElement = document.querySelector(`.trip-days li`);
+render(dayElement, `beforeend`, createDayInfoTemplate());
+render(dayElement, `beforeend`, createEventsListTemplate());
 
-const eventsListElement = document.querySelector('.trip-events__list');
+const eventsListElement = document.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < EVENTS_COUNT; i++) {
-  render(eventsListElement, 'beforeend', createEventTemplate());
+  render(eventsListElement, `beforeend`, createEventTemplate());
 }
 
