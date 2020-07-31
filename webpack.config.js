@@ -1,18 +1,18 @@
-const path = require(`path`);
+const path = require('path');
 
 module.exports = {
-  context: path.resolve(__dirname, `src`),
-  mode: `development`,
-  entry: `./main.js`,
+  context: path.resolve(__dirname, 'src'),
+  mode: 'development',
+  entry: './main.js',
   output: {
-    filename: `bundle.js`,
-    path: path.join(__dirname, `public`),
+    filename: 'bundle.js',
+    path: path.join(__dirname, 'public'),
   },
 
-  devtool: `source-map`,
+  devtool: 'source-map',
   devServer: {
     port: 6060,
-    contentBase: path.join(__dirname, `public`),
+    contentBase: path.join(__dirname, 'public'),
     hot: true,
   },
 };
