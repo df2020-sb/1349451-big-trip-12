@@ -9,7 +9,6 @@ import {createDayInfoTemplate} from './view/day-info';
 import {createEventsListTemplate} from './view/events-list';
 import {createEventTemplate} from './view/event';
 
-
 const EVENTS_COUNT = 3;
 
 const tripMainElement = document.querySelector(`.trip-main`);
