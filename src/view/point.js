@@ -12,6 +12,14 @@ export const createPointTemplate = (point) => {
   const formattedEndTime = formatTime(endDate);
   const formattedDuration = formatDuration(duration);
 
+  const createOffersList = (offersArray) => {
+    return offersArray.slice(0, 3).map((offer) =>
+      `<li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        </li>`).join(``);
+  };
+
   return (
     `<li class="trip-events__item">
     <div class="event">
@@ -35,11 +43,7 @@ export const createPointTemplate = (point) => {
 
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${offers.slice(0, 3).map((offer) =>
-      `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-          </li>`).join(``)}
+        ${createOffersList(offers)}
       </ul>
 
       <button class="event__rollup-btn" type="button">

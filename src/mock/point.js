@@ -4,7 +4,7 @@ import {POINT_TYPES, CITIES, MOCK_DESCRIPTION, OFFERS} from '../const.js';
 
 const createDescription = () => {
   const phraseArray = MOCK_DESCRIPTION.split(`.`);
-  return new Array(getRandomInteger(1, 5)).fill().map(() => getRandomArrayElement(phraseArray));
+  return (new Array(getRandomInteger(1, 5)).fill().map(() => getRandomArrayElement(phraseArray))).join(`. `);
 };
 
 const createStartDate = () => {
@@ -20,7 +20,7 @@ const createEndDate = (date) => {
   const startDate = new Date(date);
   const min = new Date(startDate).getTime();
   const max = new Date(startDate.setHours(23, 59, 59, 999)).getTime();
-  const endDate = new Date(getRandomInteger(min, max)); // пока для простоты события заканчиваются в тот же день, что и начинаются
+  const endDate = new Date(getRandomInteger(min, max));
   return new Date(endDate);
 };
 
@@ -41,7 +41,7 @@ export const createPoint = () => {
     offers: getRandomUniqueArrayElements(OFFERS),
     destination: {
       description: createDescription(),
-      photos: new Array(getRandomInteger(1, 5)).fill()
+      photos: new Array(getRandomInteger(1, 5)).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`)
     }
   };
 };

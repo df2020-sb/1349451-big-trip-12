@@ -1,11 +1,12 @@
 import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
 import {formatDateWithSlashes, formatTime} from '../utils.js';
 
+
 const createTypeTemplate = (type) => {
 
   const createTypeList = (pointTypes) => {
-    pointTypes.map((pointType) => {
-      const pointTypeLowerCase = type.toLowerCase();
+    return pointTypes.map((pointType) => {
+      const pointTypeLowerCase = pointType.toLowerCase();
       return (
         `<div class="event__type-item">
           <input id="event-type-${pointTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointTypeLowerCase}>
@@ -36,7 +37,13 @@ const createTypeTemplate = (type) => {
   );
 };
 
-const createCityTemplate = (city, citiesList, type) => {
+const createCityTemplate = (city, citiesArray, type) => {
+
+  const createCitiesList = () => {
+    return citiesArray.map((item) =>
+      `<option value="${item}"></option>`).join(``);
+  };
+
   const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
   return (
     `<div class="event__field-group  event__field-group--destination">
@@ -45,8 +52,7 @@ const createCityTemplate = (city, citiesList, type) => {
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-    ${citiesList.map((item) =>
-      `<option value="${item}"></option>`).join(``)}
+    ${createCitiesList()}
     </datalist>
   </div>`
   );
@@ -82,24 +88,32 @@ const createPriceTemplate = (price) => {
   );
 };
 
-const createOffersTemplate = (offers) => {
+const createOffersTemplate = (offersArray) => {
 
-  return (
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-      ${OFFERS.map((offer) =>
+  const createOffersList = () => {
+    return OFFERS.map((offer) =>
       `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.category}-1" type="checkbox" name="event-offer-${offer.category}" ${offers.includes(offer) ? `checked` : ``}>
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.category}-1" type="checkbox" name="event-offer-${offer.category}" ${offersArray.includes(offer) ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${offer.category}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
           </label>
-        </div>`)}
+        </div>`).join(``);
+  };
+
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+      ${createOffersList()}
       </div>
     </section>`
   );
+};
+
+const createPhotosTemplate = (photosArray) => {
+  return photosArray.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
 };
 
 export const createPointEditTemplate = (point = {}) => {
@@ -132,7 +146,7 @@ export const createPointEditTemplate = (point = {}) => {
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
-            ${destination.photos.map(() => `<img class="event__photo" src="http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo">`).join(``)}
+            ${createPhotosTemplate(destination.photos)}
             </div>
           </div>
         </section>
