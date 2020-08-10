@@ -12,15 +12,16 @@ export const getRandomArrayElement = (array) => {
 };
 
 export const getRandomUniqueArrayElements = (array) => {
-  let indices = [];
+  let result = [];
   const newArrayLength = getRandomInteger(1, array.length);
-  while (indices.length < newArrayLength) {
-    let randomIndex = getRandomInteger(0, array.length - 1);
-    if (!indices.includes(randomIndex)) {
-      indices.push(randomIndex);
+  while (result.length < newArrayLength) {
+    let index = getRandomInteger(0, array.length - 1);
+    let randomElement = array[index];
+    if (!result.includes(randomElement)) {
+      result.push(randomElement);
     }
   }
-  return indices.sort((a, b) => a - b).map((index) => array[index]);
+  return result;
 };
 
 export const formatDateWithDashes = (date) => {
@@ -55,4 +56,18 @@ export const formatDuration = (duration) => {
 
 export const render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
+};
+
+export const createDay = () => {
+  return {
+    points: []
+  };
+};
+
+export const countDays = (startDate, endDate) => {
+  return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+};
+
+export const addDays = (date, days) => {
+  return new Date(date.setDate(date.getDate() + days));
 };

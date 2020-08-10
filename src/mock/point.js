@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomArrayElement, getRandomUniqueArrayElements} from '../utils.js';
-import {EVENT_TYPES, CITIES, MOCK_DESCRIPTION, OFFERS} from '../const.js';
+import {POINT_TYPES, CITIES, MOCK_DESCRIPTION, OFFERS} from '../const.js';
 
 
 const createDescription = () => {
@@ -8,7 +8,7 @@ const createDescription = () => {
 };
 
 const createStartDate = () => {
-  const maxDayRange = 3;
+  const maxDayRange = 5;
   const dayRange = getRandomInteger(-maxDayRange, maxDayRange);
   const currentDate = new Date();
   currentDate.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));
@@ -24,9 +24,9 @@ const createEndDate = (date) => {
   return new Date(endDate);
 };
 
-export const createEvent = () => {
+export const createPoint = () => {
 
-  const {transfers, activities} = EVENT_TYPES;
+  const {transfers, activities} = POINT_TYPES;
   const startDate = createStartDate();
   const endDate = createEndDate(startDate);
   const duration = endDate - startDate;

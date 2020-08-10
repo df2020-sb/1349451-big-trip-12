@@ -1,20 +1,20 @@
 import {formatDateMonthDay} from '../utils.js';
 
-export const createTripInfoTemplate = (events) => {
+export const createTripInfoTemplate = (points) => {
 
-  const tripStartDate = events[0].startDate;
-  const tripEndDate = events[events.length - 1].endDate;
+  const tripStartDate = points[0].startDate;
+  const tripEndDate = points[points.length - 1].endDate;
   const tripStartDateString = formatDateMonthDay(tripStartDate);
   const tripEndDateString = tripStartDate.getMonth() !== tripEndDate.getMonth()
     ? formatDateMonthDay(tripEndDate)
     : `${(`0` + tripEndDate.getDate()).slice(-2)}`;
 
-  const totalPrice = events.reduce((eventsTotal, event) =>
-    eventsTotal + event.price + event.offers.reduce((offersTotal, offer) =>
+  const totalPrice = points.reduce((pointsTotal, point) =>
+    pointsTotal + point.price + point.offers.reduce((offersTotal, offer) =>
       offersTotal + offer.price, 0
     ), 0);
 
-  const cities = events.map((event) => event.city);
+  const cities = points.map((point) => point.city);
   const lastCity = cities.pop();
 
   const getMiddleCities = () => {

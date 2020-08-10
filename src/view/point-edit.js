@@ -1,8 +1,19 @@
-import {CITIES, EVENT_TYPES, OFFERS} from '../const.js';
+import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
 import {formatDateWithSlashes, formatTime} from '../utils.js';
 
-
 const createTypeTemplate = (type) => {
+
+  const createTypeList = (pointTypes) => {
+    pointTypes.map((pointType) => {
+      const pointTypeLowerCase = type.toLowerCase();
+      return (
+        `<div class="event__type-item">
+          <input id="event-type-${pointTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointTypeLowerCase}>
+          <label class="event__type-label  event__type-label--${pointTypeLowerCase}" for="event-type-${pointTypeLowerCase}-1">${pointType}</label>
+        </div>`);
+    }).join(``);
+  };
+
   return (
     `<div class="event__type-wrapper">
     <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -14,30 +25,11 @@ const createTypeTemplate = (type) => {
     <div class="event__type-list">
       <fieldset class="event__type-group">
         <legend class="visually-hidden">Transfer</legend>
-
-    ${EVENT_TYPES.transfers.map((transfer) => {
-      const transferLowerCase = transfer.toLowerCase();
-      return (
-        `<div class="event__type-item">
-          <input id="event-type-${transferLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${transferLowerCase}>
-          <label class="event__type-label  event__type-label--${transferLowerCase}" for="event-type-${transferLowerCase}-1">${transfer}</label>
-        </div>`);
-    }).join(``)}
-
+        ${createTypeList(POINT_TYPES.transfers)}
       </fieldset>
       <fieldset class="event__type-group">
         <legend class="visually-hidden">Activity</legend>
-
-    ${EVENT_TYPES.activities.map((activity) => {
-      const activityLowerCase = activity.toLowerCase();
-      return (
-        `<div class="event__type-item">
-          <input id="event-type-${activityLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${activityLowerCase}>
-          <label class="event__type-label  event__type-label--${activityLowerCase}" for="event-type-${activityLowerCase}-1">${activity}</label>
-        </div>`
-      );
-    }).join(``)}
-
+        ${createTypeList(POINT_TYPES.activities)}
       </fieldset>
     </div>
   </div>`
@@ -45,11 +37,11 @@ const createTypeTemplate = (type) => {
 };
 
 const createCityTemplate = (city, citiesList, type) => {
-  const eventTypeString = EVENT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
   return (
     `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
-    ${eventTypeString}
+    ${pointTypeString}
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
@@ -62,22 +54,17 @@ const createCityTemplate = (city, citiesList, type) => {
 
 const createDatesTemplate = (startDate, endDate) => {
 
-  const formattedStartDate = formatDateWithSlashes(startDate);
-  const formattedStartTime = formatTime(startDate);
-  const formattedEndDate = formatDateWithSlashes(endDate);
-  const formattedEndTime = formatTime(endDate);
-
   return (
     `<div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">
         From
       </label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formattedStartDate} ${formattedStartTime}">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDateWithSlashes(startDate)} ${formatTime(startDate)}">
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">
         To
       </label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formattedEndDate} ${formattedEndTime}">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDateWithSlashes(endDate)} ${formatTime(endDate)}">
     </div>`
   );
 };
@@ -115,7 +102,7 @@ const createOffersTemplate = (offers) => {
   );
 };
 
-export const createEventEditTemplate = (event = {}) => {
+export const createPointEditTemplate = (point = {}) => {
 
   const {
     type = `Flight`,
@@ -125,26 +112,20 @@ export const createEventEditTemplate = (event = {}) => {
     endDate = null,
     offers = [],
     destination = {}
-  } = event;
-
-  const typeTemplate = createTypeTemplate(type);
-  const cityTemplate = createCityTemplate(city, CITIES, type);
-  const datesTemplate = createDatesTemplate(startDate, endDate);
-  const priceTemplate = createPriceTemplate(price);
-  const offersTemplate = createOffersTemplate(offers);
+  } = point;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
-        ${typeTemplate}
-        ${cityTemplate}
-        ${datesTemplate}
-        ${priceTemplate}
+        ${createTypeTemplate(type)}
+        ${createCityTemplate(city, CITIES, type)}
+        ${createDatesTemplate(startDate, endDate)}
+        ${createPriceTemplate(price)}
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
       <section class="event__details">
-        ${offersTemplate}
+        ${createOffersTemplate(offers)}
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}.</p>

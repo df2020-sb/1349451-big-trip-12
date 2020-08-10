@@ -1,10 +1,10 @@
-import {EVENT_TYPES} from '../const.js';
+import {POINT_TYPES} from '../const.js';
 import {formatDateWithDashes, formatTime, formatDuration} from '../utils.js';
 
-export const createEventTemplate = (event) => {
+export const createPointTemplate = (point) => {
 
-  const {type, city, price, startDate, endDate, duration, offers} = event;
-  const eventTypeString = EVENT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
+  const {type, city, price, startDate, endDate, duration, offers} = point;
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
 
   const formattedStartDate = formatDateWithDashes(startDate);
   const formattedStartTime = formatTime(startDate);
@@ -18,7 +18,7 @@ export const createEventTemplate = (event) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${eventTypeString} ${city}</h3>
+      <h3 class="event__title">${pointTypeString} ${city}</h3>
 
       <div class="event__schedule">
         <p class="event__time">

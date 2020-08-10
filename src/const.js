@@ -1,4 +1,4 @@
-export const EVENT_TYPES = {
+export const POINT_TYPES = {
   transfers: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
   activities: [`Check-in`, `Sightseeing`, `Restaurant`]
 };
@@ -18,3 +18,15 @@ export const OFFERS = [
 export const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`,
   `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`
 ];
+
+// export const FILTERS = [
+//   {name: `Everything`, isActive: true},
+//   {name: `Future`, isActive: false},
+//   {name: `Past`, isActive: false}
+// ];
+
+export const FILTER = {
+  everything: true,
+  future: false,
+  past: false
+};
