@@ -15,26 +15,25 @@ const createDayTemplate = (date, dayPoints, index) => {
     <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
   </div>
   <ul class="trip-events__list">
-  ${dayPoints.map(createPointTemplate).join(``)}
+  ${dayPoints.map((point) => createPointTemplate(point)).join(``)}
   </ul >
 </li > `);
 };
 
 export const createDaysArray = (points) => {
+  const daysArray = [];
   const tripStartDate = new Date(points[0].startDate.setHours(0, 0, 0, 1));
   const tripEndDate = points[points.length - 1].endDate;
   const daysCount = countDays(tripStartDate, tripEndDate);
-  const daysArray = new Array(daysCount).fill().map(createDay);
 
-  for (let i = 1; i < points.length; i++) {
-    let dayNumber = countDays(tripStartDate, points[i].startDate);
-    daysArray[dayNumber - 1].points.push(points[i]);
+  for (let i = 0; i < daysCount; i++) {
+    daysArray.push(createDay());
+    daysArray[i].date = addDays(tripStartDate, i);
+
+    const filteredPoints = points.filter((point) => countDays(point.startDate, daysArray[i].date) === 0);
+    daysArray[i].points.push(...filteredPoints);
   }
 
-  for (let i = 0; i < daysArray.length; i++) {
-    let date = new Date(tripStartDate);
-    daysArray[i].date = addDays(date, i);
-  }
   return daysArray;
 };
 
