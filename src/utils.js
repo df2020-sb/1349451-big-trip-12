@@ -58,12 +58,6 @@ export const render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
 };
 
-export const createDay = () => {
-  return {
-    points: []
-  };
-};
-
 export const countDays = (startDate, endDate) => {
   return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 };

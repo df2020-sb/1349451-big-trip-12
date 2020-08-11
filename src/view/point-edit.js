@@ -2,18 +2,20 @@ import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
 import {formatDateWithSlashes, formatTime} from '../utils.js';
 
 
-const createTypeTemplate = (type) => {
+const createTypeList = (pointTypes) => {
 
-  const createTypeList = (pointTypes) => {
-    return pointTypes.map((pointType) => {
-      const pointTypeLowerCase = pointType.toLowerCase();
-      return (
-        `<div class="event__type-item">
-          <input id="event-type-${pointTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointTypeLowerCase}>
-          <label class="event__type-label  event__type-label--${pointTypeLowerCase}" for="event-type-${pointTypeLowerCase}-1">${pointType}</label>
-        </div>`);
-    }).join(``);
-  };
+  return pointTypes.map((pointType) => {
+    const pointTypeLowerCase = pointType.toLowerCase();
+    return (
+      `<div class="event__type-item">
+        <input id="event-type-${pointTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointTypeLowerCase}>
+        <label class="event__type-label  event__type-label--${pointTypeLowerCase}" for="event-type-${pointTypeLowerCase}-1">${pointType}</label>
+      </div>`);
+  }).join(``);
+};
+
+
+const createTypeTemplate = (type) => {
 
   return (
     `<div class="event__type-wrapper">
@@ -37,14 +39,17 @@ const createTypeTemplate = (type) => {
   );
 };
 
+
+const createCitiesList = (cities) => {
+
+  return cities.map((city) =>
+    `<option value="${city}"></option>`).join(``);
+};
+
+
 const createCityTemplate = (city, citiesArray, type) => {
-
-  const createCitiesList = () => {
-    return citiesArray.map((item) =>
-      `<option value="${item}"></option>`).join(``);
-  };
-
   const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
+
   return (
     `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
@@ -52,11 +57,12 @@ const createCityTemplate = (city, citiesArray, type) => {
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
     <datalist id="destination-list-1">
-    ${createCitiesList()}
+    ${createCitiesList(citiesArray)}
     </datalist>
   </div>`
   );
 };
+
 
 const createDatesTemplate = (startDate, endDate) => {
 
@@ -75,6 +81,7 @@ const createDatesTemplate = (startDate, endDate) => {
   );
 };
 
+
 const createPriceTemplate = (price) => {
 
   return (
@@ -88,33 +95,39 @@ const createPriceTemplate = (price) => {
   );
 };
 
-const createOffersTemplate = (offersArray) => {
 
-  const createOffersList = () => {
-    return OFFERS.map((offer) =>
-      `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.category}-1" type="checkbox" name="event-offer-${offer.category}" ${offersArray.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.category}-1">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-          </label>
-        </div>`).join(``);
-  };
+const createOffersList = (offers) => {
+
+  return OFFERS.map((offer) =>
+    `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.category}-1" type="checkbox" name="event-offer-${offer.category}" ${offers.includes(offer) ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${offer.category}-1">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`).join(``);
+};
+
+
+const createOffersTemplate = (offersArray) => {
 
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-      ${createOffersList()}
+      ${createOffersList(offersArray)}
       </div>
     </section>`
   );
 };
 
+
 const createPhotosTemplate = (photosArray) => {
+
   return photosArray.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
 };
+
 
 export const createPointEditTemplate = (point = {}) => {
 

@@ -1,8 +1,26 @@
-import {formatDateMonthDay, formatDateWithDashes, createDay, countDays, addDays} from '../utils.js';
+import {formatDateMonthDay, formatDateWithDashes, countDays, addDays} from '../utils.js';
 import {createPointTemplate} from './point';
 
-export const createDaysListTemplate = (points) => {
+const createDay = () => {
+  return {
+    date: null,
+    points: []
+  };
+};
 
+const createDayTemplate = (date, dayPoints, index) => {
+  return (`<li class="trip-days__item  day">
+  <div class="day__info">
+    <span class="day__counter">${index + 1}</span>
+    <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
+  </div>
+  <ul class="trip-events__list">
+  ${dayPoints.map(createPointTemplate).join(``)}
+  </ul >
+</li > `);
+};
+
+export const createDaysArray = (points) => {
   const tripStartDate = new Date(points[0].startDate.setHours(0, 0, 0, 1));
   const tripEndDate = points[points.length - 1].endDate;
   const daysCount = countDays(tripStartDate, tripEndDate);
@@ -13,24 +31,18 @@ export const createDaysListTemplate = (points) => {
     daysArray[dayNumber - 1].points.push(points[i]);
   }
 
-  const createDayTemplate = (dayPoints, index) => {
+  for (let i = 0; i < daysArray.length; i++) {
     let date = new Date(tripStartDate);
-    date = addDays(date, index);
-    return (`<li class="trip-days__item  day">
-    <div class="day__info">
-      <span class="day__counter">${index + 1}</span>
-      <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
-    </div>
-    <ul class="trip-events__list">
-    ${dayPoints.map(createPointTemplate).join(``)}
-    </ul >
-  </li > `);
-  };
+    daysArray[i].date = addDays(date, i);
+  }
+  return daysArray;
+};
 
+export const createDaysListTemplate = (daysArray) => {
   return (
     `<ul class="trip-days">
     ${daysArray.map((day, index) => {
-      return createDayTemplate(day.points, index);
+      return createDayTemplate(day.date, day.points, index);
     }).join(``)}
     </ul > `
   );
