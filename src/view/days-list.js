@@ -1,4 +1,4 @@
-import {formatDateMonthDay, formatDateWithDashes, countDays, addDays} from '../utils.js';
+import {formatDateMonthDay, formatDateWithDashes} from '../utils.js';
 import {createPointTemplate} from './point';
 
 const createDay = () => {
@@ -22,16 +22,15 @@ const createDayTemplate = (date, dayPoints, index) => {
 
 export const createDaysArray = (points) => {
   const daysArray = [];
-  const tripStartDate = new Date(points[0].startDate.setHours(0, 0, 0, 1));
-  const tripEndDate = points[points.length - 1].endDate;
-  const daysCount = countDays(tripStartDate, tripEndDate);
+  let newDay = createDay();
 
-  for (let i = 0; i < daysCount; i++) {
-    daysArray.push(createDay());
-    daysArray[i].date = addDays(tripStartDate, i);
-
-    const filteredPoints = points.filter((point) => countDays(point.startDate, daysArray[i].date) === 0);
-    daysArray[i].points.push(...filteredPoints);
+  for (let i = 1; i < points.length; i++) {
+    if (points[i - 1].startDate.getDate() !== points[i].startDate.getDate()) {
+      newDay.date = points[i - 1].startDate;
+      daysArray.push(newDay);
+      newDay = createDay();
+    }
+    newDay.points.push(points[i]);
   }
 
   return daysArray;

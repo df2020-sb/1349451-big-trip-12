@@ -8,7 +8,7 @@ const createDescription = () => {
 };
 
 const createStartDate = () => {
-  const maxDayRange = 5;
+  const maxDayRange = 4;
   const dayRange = getRandomInteger(-maxDayRange, maxDayRange);
   const currentDate = new Date();
   currentDate.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));

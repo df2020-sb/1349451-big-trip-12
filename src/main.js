@@ -7,7 +7,7 @@ import {createSortTemplate} from './view/sort';
 import {createDaysArray, createDaysListTemplate} from './view/days-list';
 import {createPointEditTemplate} from './view/point-edit';
 
-const POINTS_COUNT = 15;
+const POINTS_COUNT = 20;
 
 const points = new Array(POINTS_COUNT)
   .fill()

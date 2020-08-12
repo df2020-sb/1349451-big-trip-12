@@ -57,11 +57,3 @@ export const formatDuration = (duration) => {
 export const render = (container, position, template) => {
   container.insertAdjacentHTML(position, template);
 };
-
-export const countDays = (startDate, endDate) => {
-  return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-};
-
-export const addDays = (date, days) => {
-  return new Date(date.setDate(date.getDate() + days));
-};
