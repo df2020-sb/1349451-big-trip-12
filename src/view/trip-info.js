@@ -1,6 +1,6 @@
-import {formatDateMonthDay} from '../utils.js';
+import {formatDateMonthDay, createElement} from '../utils.js';
 
-export const createTripInfoTemplate = (points) => {
+const createTripInfoTemplate = (points) => {
 
   const tripStartDate = points[0].startDate;
   const tripEndDate = points[points.length - 1].endDate;
@@ -48,3 +48,27 @@ export const createTripInfoTemplate = (points) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+
+  constructor(points) {
+    this._points = points;
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createTripInfoTemplate(this._points);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

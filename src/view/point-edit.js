@@ -1,5 +1,16 @@
 import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
-import {formatDateWithSlashes, formatTime} from '../utils.js';
+import {formatDateWithSlashes, formatTime, createElement} from '../utils.js';
+
+
+const EMPTY_POINT = {
+  type: `Flight`,
+  city: ``,
+  price: ``,
+  startDate: null,
+  endDate: null,
+  offers: [],
+  destination: {}
+};
 
 
 const createTypeList = (pointTypes) => {
@@ -129,41 +140,67 @@ const createPhotosTemplate = (photosArray) => {
 };
 
 
-export const createPointEditTemplate = (point = {}) => {
+export const createPointEditTemplate = (point) => {
 
   const {
-    type = `Flight`,
-    city = ``,
-    price = ``,
-    startDate = null,
-    endDate = null,
-    offers = [],
-    destination = {}
+    type,
+    city,
+    price,
+    startDate,
+    endDate,
+    offers,
+    destination
   } = point;
 
   return (
-    `<form class="trip-events__item  event  event--edit" action="#" method="post">
-      <header class="event__header">
-        ${createTypeTemplate(type)}
-        ${createCityTemplate(city, CITIES, type)}
-        ${createDatesTemplate(startDate, endDate)}
-        ${createPriceTemplate(price)}
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-      </header>
-      <section class="event__details">
-        ${createOffersTemplate(offers)}
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}.</p>
+    `<div>
+      <form class="trip-events__item  event  event--edit" action="#" method="post">
+        <header class="event__header">
+          ${createTypeTemplate(type)}
+          ${createCityTemplate(city, CITIES, type)}
+          ${createDatesTemplate(startDate, endDate)}
+          ${createPriceTemplate(price)}
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
+        </header>
+        <section class="event__details">
+          ${createOffersTemplate(offers)}
+          <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+            <p class="event__destination-description">${destination.description}.</p>
 
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-            ${createPhotosTemplate(destination.photos)}
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+              ${createPhotosTemplate(destination.photos)}
+              </div>
             </div>
-          </div>
+          </section>
         </section>
-      </section>
-    </form>`
+      </form>
+    </div>`
   );
 };
+
+export default class PointEdit {
+
+  constructor(point = EMPTY_POINT) {
+    this._point = point;
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createPointEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}
