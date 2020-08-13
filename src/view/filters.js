@@ -1,6 +1,8 @@
 import {FILTER} from '../const';
+import {createElement} from "../utils.js";
 
-export const createFiltersTemplate = () => {
+
+const createFiltersTemplate = () => {
   return (
     `<div>
       <h2 class="visually-hidden">Filter events</h2>
@@ -16,3 +18,26 @@ export const createFiltersTemplate = () => {
     </div>`
   );
 };
+
+export default class Filter {
+
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createFiltersTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

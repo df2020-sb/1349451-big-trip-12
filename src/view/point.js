@@ -1,7 +1,7 @@
 import {POINT_TYPES} from '../const.js';
-import {formatDateWithDashes, formatTime, formatDuration} from '../utils.js';
+import {formatDateWithDashes, formatTime, formatDuration, createElement} from '../utils.js';
 
-export const createPointTemplate = (point) => {
+const createPointTemplate = (point) => {
 
   const {type, city, price, startDate, endDate, duration, offers} = point;
   const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
@@ -53,3 +53,27 @@ export const createPointTemplate = (point) => {
   </li>`
   );
 };
+
+export default class Point {
+
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}
