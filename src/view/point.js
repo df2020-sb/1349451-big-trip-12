@@ -1,5 +1,6 @@
 import {POINT_TYPES} from '../const.js';
-import {formatDateWithDashes, formatTime, formatDuration, createElement} from '../utils.js';
+import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
+import View from './View';
 
 const createPointTemplate = (point) => {
 
@@ -54,26 +55,25 @@ const createPointTemplate = (point) => {
   );
 };
 
-export default class Point {
+export default class Point extends View {
 
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
+    this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupCkick();
   }
 
-  removeElement() {
-    this._element.remove();
-    this._element = null;
+  setRollupClickHandler(callback) {
+    this._callback.rollupCkick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
   }
 }

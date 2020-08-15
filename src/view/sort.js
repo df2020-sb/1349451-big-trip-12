@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import View from './View';
 
 const createSortTemplate = () => {
   return (
@@ -35,25 +35,8 @@ const createSortTemplate = () => {
   );
 };
 
-export default class Sort {
-
-  constructor() {
-    this._element = null;
-  }
-
+export default class Sort extends View {
   _getTemplate() {
     return createSortTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }

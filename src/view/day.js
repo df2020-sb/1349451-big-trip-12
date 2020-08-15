@@ -1,4 +1,5 @@
-import {formatDateMonthDay, formatDateWithDashes, createElement} from '../utils.js';
+import {formatDateMonthDay, formatDateWithDashes} from '../utils/date';
+import View from './View';
 
 const createDayTemplate = (date, index) => {
   return (
@@ -11,27 +12,15 @@ const createDayTemplate = (date, index) => {
     </li>`);
 };
 
-export default class Day {
+export default class Day extends View {
   constructor(date, index) {
+    super();
     this._date = date;
     this._index = index;
-    this._element = null;
   }
 
   _getTemplate() {
     return createDayTemplate(this._date, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }
 

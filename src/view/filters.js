@@ -1,6 +1,5 @@
 import {FILTER} from '../const';
-import {createElement} from "../utils.js";
-
+import View from './View';
 
 const createFiltersTemplate = () => {
   return (
@@ -19,25 +18,8 @@ const createFiltersTemplate = () => {
   );
 };
 
-export default class Filter {
-
-  constructor() {
-    this._element = null;
-  }
-
+export default class Filter extends View {
   _getTemplate() {
     return createFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }

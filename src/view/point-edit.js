@@ -1,6 +1,6 @@
 import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
-import {formatDateWithSlashes, formatTime, createElement} from '../utils.js';
-
+import {formatDateWithSlashes, formatTime} from '../utils/date';
+import View from './View';
 
 const EMPTY_POINT = {
   type: `Flight`,
@@ -181,26 +181,25 @@ export const createPointEditTemplate = (point) => {
   );
 };
 
-export default class PointEdit {
+export default class PointEdit extends View {
 
   constructor(point = EMPTY_POINT) {
+    super();
     this._point = point;
-    this._element = null;
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   _getTemplate() {
     return createPointEditTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
   }
 
-  removeElement() {
-    this._element.remove();
-    this._element = null;
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._submitHandler);
   }
 }
