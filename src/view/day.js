@@ -1,37 +1,26 @@
-import {formatDateMonthDay, formatDateWithDashes, createElement} from '../utils.js';
+import {formatDateMonthDay, formatDateWithDashes} from '../utils/date';
+import AbstractView from './abstract';
 
 const createDayTemplate = (date, index) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${index + 1}</span>
+        <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
       </div>
       <ul class="trip-events__list"></ul>
     </li>`);
 };
 
-export default class Day {
+export default class Day extends AbstractView {
   constructor(date, index) {
+    super();
     this._date = date;
     this._index = index;
-    this._element = null;
   }
 
   _getTemplate() {
     return createDayTemplate(this._date, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }
 
