@@ -34,11 +34,11 @@ export const createElement = (template) => {
 };
 
 export const replace = (newElement, oldElement) => {
-  if (oldElement instanceof View) {
+  if (oldElement instanceof AbstractView) {
     oldElement = oldElement.getElement();
   }
 
-  if (newElement instanceof View) {
+  if (newElement instanceof AbstractView) {
     newElement = newElement.getElement();
   }
 

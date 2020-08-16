@@ -19,7 +19,7 @@ const createDaysArray = (points) => {
   let newDay = createDay();
   let startDate = points[0].startDate.getDate();
 
-  for (let point of points) {
+  points.forEach((point) => {
     if (point.startDate.getDate() !== startDate) {
       newDay.date = point.startDate;
       daysArray.push(newDay);
@@ -27,7 +27,8 @@ const createDaysArray = (points) => {
       startDate = point.startDate.getDate();
     }
     newDay.points.push(point);
-  }
+  });
+
   return daysArray;
 };
 
