@@ -1,6 +1,6 @@
 import {POINT_TYPES} from '../const.js';
 import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
-import View from './View';
+import AbstractView from './abstract';
 
 const createPointTemplate = (point) => {
 
@@ -55,7 +55,7 @@ const createPointTemplate = (point) => {
   );
 };
 
-export default class Point extends View {
+export default class Point extends AbstractView {
 
   constructor(point) {
     super();

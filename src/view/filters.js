@@ -1,5 +1,5 @@
 import {FILTER} from '../const';
-import View from './View';
+import AbstractView from './abstract';
 
 const createFiltersTemplate = () => {
   return (
@@ -18,7 +18,7 @@ const createFiltersTemplate = () => {
   );
 };
 
-export default class Filter extends View {
+export default class Filter extends AbstractView {
   _getTemplate() {
     return createFiltersTemplate();
   }

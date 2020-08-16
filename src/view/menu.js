@@ -1,4 +1,4 @@
-import View from './View';
+import AbstractView from './abstract';
 
 const createMenuTemplate = () => {
   return (
@@ -12,7 +12,7 @@ const createMenuTemplate = () => {
   );
 };
 
-export default class Menu extends View {
+export default class Menu extends AbstractView {
   _getTemplate() {
     return createMenuTemplate();
   }

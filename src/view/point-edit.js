@@ -1,6 +1,6 @@
 import {CITIES, POINT_TYPES, OFFERS} from '../const.js';
 import {formatDateWithSlashes, formatTime} from '../utils/date';
-import View from './View';
+import AbstractView from './abstract';
 
 const EMPTY_POINT = {
   type: `Flight`,
@@ -181,7 +181,7 @@ export const createPointEditTemplate = (point) => {
   );
 };
 
-export default class PointEdit extends View {
+export default class PointEdit extends AbstractView {
 
   constructor(point = EMPTY_POINT) {
     super();

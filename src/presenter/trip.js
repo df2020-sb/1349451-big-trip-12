@@ -17,14 +17,16 @@ const createDay = () => {
 const createDaysArray = (points) => {
   const daysArray = [];
   let newDay = createDay();
+  let startDate = points[0].startDate.getDate();
 
-  for (let i = 0; i < points.length; i++) {
-    if (i > 0 && points[i - 1].startDate.getDate() !== points[i].startDate.getDate()) {
-      newDay.date = points[i - 1].startDate;
+  for (let point of points) {
+    if (point.startDate.getDate() !== startDate) {
+      newDay.date = point.startDate;
       daysArray.push(newDay);
       newDay = createDay();
+      startDate = point.startDate.getDate();
     }
-    newDay.points.push(points[i]);
+    newDay.points.push(point);
   }
   return daysArray;
 };
@@ -34,8 +36,6 @@ export default class Trip {
 
   constructor(container, points) {
     this._points = [...points];
-    this._receivedPoints = [...points];
-
     this._container = container;
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
@@ -77,20 +77,20 @@ export default class Trip {
 
   init() {
     const daysArray = createDaysArray(this._points);
+    let dayNumber = 0;
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
 
     if (!this._points[0]) {
       render(this._container, this._noPointsComponent, RenderPosition.AFTERBEGIN);
       return;
     }
-
     render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
 
-    for (let i = 0; i < daysArray.length; i++) {
-      const day = new Day(daysArray[i].date, i);
-      render(this._daysListComponent, day, RenderPosition.BEFOREEND);
-      const pointsContainer = day.getElement().querySelector(`.trip-events__list`);
-      daysArray[i].points.forEach((point) => this._renderPoint(pointsContainer, point));
-    }
+    daysArray.forEach((day) => {
+      const dayComponent = new Day(day.date, ++dayNumber);
+      render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
+      const pointsContainer = dayComponent.getElement().querySelector(`.trip-events__list`);
+      day.points.forEach((point) => this._renderPoint(pointsContainer, point));
+    });
   }
 }

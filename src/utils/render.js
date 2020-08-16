@@ -1,4 +1,4 @@
-import View from '../view/View';
+import AbstractView from '../view/abstract';
 
 
 export const RenderPosition = {
@@ -8,11 +8,11 @@ export const RenderPosition = {
 
 export const render = (container, element, position) => {
 
-  if (container instanceof View) {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (element instanceof View) {
+  if (element instanceof AbstractView) {
     element = element.getElement();
   }
 
@@ -24,10 +24,6 @@ export const render = (container, element, position) => {
       container.append(element);
       break;
   }
-};
-
-export const renderTemplate = (container, template, position) => {
-  container.insertAdjacentHTML(position, template);
 };
 
 export const createElement = (template) => {
@@ -48,7 +44,7 @@ export const replace = (newElement, oldElement) => {
 
   const parent = oldElement.parentElement;
 
-  if (parent === null || oldElement === null || newElement === null) {
+  if (parent === null || newElement === null) {
     throw new Error(`Can't replace unexisting elements`);
   }
   parent.replaceChild(newElement, oldElement);

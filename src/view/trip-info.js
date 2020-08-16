@@ -1,5 +1,5 @@
 import {formatDateMonthDay} from '../utils/date';
-import View from './View';
+import AbstractView from './abstract';
 
 const createTripInfoTemplate = (points) => {
 
@@ -50,7 +50,7 @@ const createTripInfoTemplate = (points) => {
   );
 };
 
-export default class TripInfo extends View {
+export default class TripInfo extends AbstractView {
   constructor(points) {
     super();
     this._points = points;

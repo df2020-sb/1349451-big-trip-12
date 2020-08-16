@@ -1,18 +1,18 @@
 import {formatDateMonthDay, formatDateWithDashes} from '../utils/date';
-import View from './View';
+import AbstractView from './abstract';
 
 const createDayTemplate = (date, index) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${index + 1}</span>
+        <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
       </div>
       <ul class="trip-events__list"></ul>
     </li>`);
 };
 
-export default class Day extends View {
+export default class Day extends AbstractView {
   constructor(date, index) {
     super();
     this._date = date;
