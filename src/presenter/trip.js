@@ -1,4 +1,6 @@
+import {SortType} from "../const.js";
 import {render, RenderPosition, replace} from '../utils/render';
+import {sortByPrice, sortByTime} from '../utils/sort';
 import Sort from '../view/sort';
 import Day from '../view/day';
 import DaysList from '../view/days-list';
@@ -32,15 +34,26 @@ const createDaysArray = (points) => {
   return daysArray;
 };
 
-
 export default class Trip {
 
   constructor(container, points) {
     this._points = [...points];
+    this._receivedPoints = [...points];
+
     this._container = container;
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
     this._noPointsComponent = new NoPoints();
+    this._currenSortType = SortType.DEFAULT;
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+  }
+  _renderSort() {
+    render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeSelectHandler(this._handleSortTypeChange);
+  }
+
+  _renderDaysList() {
+    render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(pointsContainer, point) {
@@ -76,22 +89,59 @@ export default class Trip {
     render(pointsContainer, pointComponent, RenderPosition.BEFOREEND);
   }
 
-  init() {
+  _renderPoints(dayComponent, points) {
+    const pointsContainer = dayComponent.getElement().querySelector(`.trip-events__list`);
+    points.forEach((point) => this._renderPoint(pointsContainer, point));
+  }
+
+  _renderSortedPoints() {
+    const dayComponent = new Day();
+    render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
+    this._renderPoints(dayComponent, this._points);
+  }
+
+  _renderDays() {
     const daysArray = createDaysArray(this._points);
     let dayNumber = 0;
-    render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
+    daysArray.forEach((day) => {
+      const dayComponent = new Day(day.date, ++dayNumber);
+      render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
+      this._renderPoints(dayComponent, day.points);
+    });
+  }
+
+  _handleSortTypeChange(sortType) {
+
+    if (this._currenSortType === sortType) {
+      return;
+    }
+    this._daysListComponent.getElement().innerHTML = ``;
+
+    switch (sortType) {
+      case SortType.TIME:
+        this._points.sort(sortByTime);
+        this._renderSortedPoints();
+        break;
+      case SortType.PRICE:
+        this._points.sort(sortByPrice);
+        this._renderSortedPoints();
+        break;
+      default:
+        this._points = [...this._receivedPoints];
+        this._renderDays();
+    }
+    this._currenSortType = sortType;
+  }
+
+  init() {
 
     if (!this._points[0]) {
       render(this._container, this._noPointsComponent, RenderPosition.AFTERBEGIN);
       return;
     }
-    render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
 
-    daysArray.forEach((day) => {
-      const dayComponent = new Day(day.date, ++dayNumber);
-      render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
-      const pointsContainer = dayComponent.getElement().querySelector(`.trip-events__list`);
-      day.points.forEach((point) => this._renderPoint(pointsContainer, point));
-    });
+    this._renderDaysList();
+    this._renderSort();
+    this._renderDays();
   }
 }
