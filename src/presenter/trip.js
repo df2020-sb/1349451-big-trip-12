@@ -147,7 +147,7 @@ export default class Trip {
 
   init() {
 
-    if (this._points.length === 0) {
+    if (!this._points.length) {
       render(this._container, this._noPointsComponent, RenderPosition.AFTERBEGIN);
       return;
     }
