@@ -24,3 +24,9 @@ export const FILTER = {
   future: false,
   past: false
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  TIME: `time`,
+  PRICE: `price`
+};

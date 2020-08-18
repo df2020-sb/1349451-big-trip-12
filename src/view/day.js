@@ -5,8 +5,8 @@ const createDayTemplate = (date, index) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${index}</span>
-        <time class="day__date" datetime="${formatDateWithDashes(date)}">${formatDateMonthDay(date)}</time>
+        <span class="day__counter">${index || ``}</span>
+        <time class="day__date" datetime="${date ? formatDateWithDashes(date) : ``}">${date ? formatDateMonthDay(date) : ``}</time>
       </div>
       <ul class="trip-events__list"></ul>
     </li>`);
@@ -23,4 +23,3 @@ export default class Day extends AbstractView {
     return createDayTemplate(this._date, this._index);
   }
 }
-
