@@ -44,8 +44,9 @@ export default class Trip {
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
     this._noPointsComponent = new NoPoints();
-    this._currenSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._renderedPoints = [];
   }
   _renderSort() {
     render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
@@ -76,6 +77,12 @@ export default class Trip {
       }
     };
 
+    const removeEscListener = () => {
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    };
+
+    pointComponent.setRemoveEvtHandler(removeEscListener);
+
     pointComponent.setRollupClickHandler(() => {
       replacePointToForm();
       document.addEventListener(`keydown`, onEscKeyDown);
@@ -86,6 +93,7 @@ export default class Trip {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
+    this._renderedPoints.push(pointComponent);
     render(pointsContainer, pointComponent, RenderPosition.BEFOREEND);
   }
 
@@ -112,10 +120,14 @@ export default class Trip {
 
   _handleSortTypeChange(sortType) {
 
-    if (this._currenSortType === sortType) {
+    if (this._currentSortType === sortType) {
       return;
     }
+
     this._daysListComponent.getElement().innerHTML = ``;
+    this._renderedPoints.forEach((point) => {
+      point.removeEvtHandler();
+    });
 
     switch (sortType) {
       case SortType.TIME:
@@ -130,12 +142,12 @@ export default class Trip {
         this._points = [...this._receivedPoints];
         this._renderDays();
     }
-    this._currenSortType = sortType;
+    this._currentSortType = sortType;
   }
 
   init() {
 
-    if (!this._points[0]) {
+    if (this._points.length === 0) {
       render(this._container, this._noPointsComponent, RenderPosition.AFTERBEGIN);
       return;
     }

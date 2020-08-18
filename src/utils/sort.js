@@ -1,13 +1,13 @@
 const compareNullAttributes = (attributeA, attributeB) => {
-  if (attributeA === null && attributeB === null) {
+  if (!attributeA && !attributeB) {
     return 0;
   }
 
-  if (attributeA === null) {
+  if (!attributeA) {
     return 1;
   }
 
-  if (attributeB === null) {
+  if (!attributeB) {
     return -1;
   }
 
