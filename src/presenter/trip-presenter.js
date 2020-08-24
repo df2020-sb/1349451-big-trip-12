@@ -36,12 +36,13 @@ const createDaysArray = (points) => {
 
 export default class Trip {
 
-  constructor(container, points) {
+  constructor(container, points, changeTripInfo) {
     this._points = [...points];
     this._receivedPoints = [...points];
     this._daysArray = [];
     this._renderedDays = [];
     this._pointPresenter = {};
+    this._changeTripInfo = changeTripInfo;
 
     this._container = container;
     this._sortComponent = new Sort();
@@ -124,6 +125,7 @@ export default class Trip {
     this._points = updateArrayItem(this._points, updatedPoint);
     this._receivedPoints = updateArrayItem(this._receivedPoints, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
+    this._changeTripInfo(this._points);
   }
 
   _handleModeChange() {
