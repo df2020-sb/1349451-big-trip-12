@@ -44,6 +44,7 @@ export default class Sort extends AbstractView {
   _getTemplate() {
     return createSortTemplate();
   }
+
   _sortTypeChangeHandler(evt) {
     if (evt.target.tagName === `INPUT`) {
       this._callback.sortTypeChange(evt.target.dataset.sortType);

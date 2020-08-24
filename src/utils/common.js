@@ -11,7 +11,7 @@ export const getRandomArrayElement = (array) => {
 
 export const getRandomUniqueArrayElements = (array) => {
   let result = [];
-  const newArrayLength = getRandomInteger(1, array.length);
+  const newArrayLength = array.length ? getRandomInteger(1, array.length) : 0;
   while (result.length < newArrayLength) {
     let index = getRandomInteger(0, array.length - 1);
     let randomElement = array[index];
@@ -20,4 +20,15 @@ export const getRandomUniqueArrayElements = (array) => {
     }
   }
   return result;
+};
+
+export const updateArrayItem = (array, update) => {
+  const index = array.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return array;
+  }
+
+  return [...array.slice(0, index), update, ...array.slice(index + 1)
+  ];
 };

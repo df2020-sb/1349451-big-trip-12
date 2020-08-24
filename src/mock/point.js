@@ -2,9 +2,22 @@ import {getRandomInteger, getRandomArrayElement, getRandomUniqueArrayElements} f
 import {POINT_TYPES, CITIES, MOCK_DESCRIPTION, OFFERS} from '../const.js';
 
 
-const createDescription = () => {
+export const createDescription = () => {
   const phraseArray = MOCK_DESCRIPTION.split(`.`);
   return (new Array(getRandomInteger(1, 5)).fill().map(() => getRandomArrayElement(phraseArray))).join(`. `);
+};
+
+export const getTypesByCategory = (category) => {
+  return POINT_TYPES.filter((item) => item.category === category).map((item) => item.type);
+};
+
+export const getAvailableOffers = (type) => {
+  let result = [];
+  let offerCategories = POINT_TYPES.find((item) => item.type === type).offerCategories;
+  if (offerCategories.length) {
+    result = OFFERS.filter((item) => offerCategories.includes(item.category));
+  }
+  return result;
 };
 
 const createStartDate = () => {
@@ -24,24 +37,29 @@ const createEndDate = (date) => {
   return new Date(endDate);
 };
 
-export const createPoint = () => {
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
-  const {transfers, activities} = POINT_TYPES;
+export const createPoint = () => {
+  const type = getRandomArrayElement(POINT_TYPES).type;
   const startDate = createStartDate();
   const endDate = createEndDate(startDate);
   const duration = endDate - startDate;
+  const availableOffers = getAvailableOffers(type);
+
 
   return {
-    type: getRandomArrayElement([...transfers, ...activities]),
+    id: generateId(),
+    type,
     city: getRandomArrayElement(CITIES),
     price: getRandomInteger(10, 1000),
     startDate,
     endDate,
     duration,
-    offers: getRandomUniqueArrayElements(OFFERS),
+    offers: getRandomUniqueArrayElements(availableOffers),
+    isFavorite: (!!getRandomInteger(0, 1)),
     destination: {
       description: createDescription(),
       photos: new Array(getRandomInteger(1, 5)).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`)
-    }
+    },
   };
 };

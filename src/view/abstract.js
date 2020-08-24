@@ -22,7 +22,7 @@ export default class AbstractView {
   }
 
   removeElement() {
-    this._element.remove();
+    // this._element.remove();
     this._element = null;
   }
 }

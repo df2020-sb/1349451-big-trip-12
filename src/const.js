@@ -1,7 +1,17 @@
-export const POINT_TYPES = {
-  transfers: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
-  activities: [`Check-in`, `Sightseeing`, `Restaurant`]
-};
+
+export const POINT_TYPES = [
+  {type: `Taxi`, category: `transfers`, offerCategories: [`luggage`, `comfort`]},
+  {type: `Bus`, category: `transfers`, offerCategories: [`luggage`, `comfort`, `meal`, `seats`]},
+  {type: `Train`, category: `transfers`, offerCategories: [`luggage`, `comfort`, `train`]},
+  {type: `Ship`, category: `transfers`, offerCategories: [`luggage`, `comfort`, `seats`]},
+  {type: `Transport`, category: `transfers`, offerCategories: [`luggage`, `seats`, `train`]},
+  {type: `Drive`, category: `transfers`, offerCategories: []},
+  {type: `Flight`, category: `transfers`, offerCategories: [`meal`, `comfort`]},
+  {type: `Check-in`, category: `activities`, offerCategories: [`meal`, `comfort`]},
+  {type: `Sightseeing`, category: `activities`, offerCategories: [`meal`, `comfort`, `seats`]},
+  {type: `Restaurant`, category: `activities`, offerCategories: []},
+];
+
 
 export const CITIES = [`Rome`, `Paris`, `London`, `Madrid`, `Lisbon`, `Prague`, `Helsinki`];
 

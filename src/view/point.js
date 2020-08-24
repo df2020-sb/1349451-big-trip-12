@@ -1,11 +1,11 @@
-import {POINT_TYPES} from '../const.js';
 import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
+import {getTypesByCategory} from '../mock/point';
 import AbstractView from './abstract';
 
 const createPointTemplate = (point) => {
 
   const {type, city, price, startDate, endDate, duration, offers} = point;
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
+  const pointTypeString = getTypesByCategory(`activities`).includes(type) ? `${type} in ` : `${type} to`;
 
   const formattedStartDate = formatDateWithDashes(startDate);
   const formattedStartTime = formatTime(startDate);
@@ -60,28 +60,20 @@ export default class Point extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._chevronClickHandler = this._chevronClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  _rollupClickHandler(evt) {
+  _chevronClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollupCkick();
   }
 
-  setRollupClickHandler(callback) {
+  setChevronClickHandler(callback) {
     this._callback.rollupCkick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
-  }
-
-  removeEvtHandler() {
-    this._callback.removeEvt();
-  }
-
-  setRemoveEvtHandler(callback) {
-    this._callback.removeEvt = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._chevronClickHandler);
   }
 }

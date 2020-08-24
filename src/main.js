@@ -3,7 +3,7 @@ import {createPoint} from './mock/point';
 import TripInfo from './view/trip-info';
 import Menu from './view/menu';
 import Filter from './view/filters';
-import Trip from './presenter/trip';
+import Trip from './presenter/trip-presenter';
 
 const POINTS_COUNT = 30;
 
@@ -19,8 +19,7 @@ const points = new Array(POINTS_COUNT)
   .map(createPoint)
   .sort((a, b) => a.startDate - b.startDate);
 
-
-const main = document.querySelector(`.trip-main`);
+export const main = document.querySelector(`.trip-main`);
 const controls = document.querySelector(`.trip-controls`);
 const tripContainer = document.querySelector(`.trip-events`);
 const tripPresenter = new Trip(tripContainer, points);
