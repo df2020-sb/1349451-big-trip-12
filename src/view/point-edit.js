@@ -110,10 +110,10 @@ const createPriceTemplate = (price) => {
 
 
 const createOffersList = (offers, type) => {
-  return getAvailableOffers(type).map((offer) =>
+  return Object.entries(getAvailableOffers(type)).map(([category, offer]) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.category}-1" type="checkbox" name="event-offer-${offer.category}" ${offers.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.category}-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${category}-1" type="checkbox" name="event-offer-${category}" ${offers.hasOwnProperty(category) ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${category}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
           &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -122,13 +122,13 @@ const createOffersList = (offers, type) => {
 };
 
 
-const createOffersTemplate = (offersArray, type) => {
+const createOffersTemplate = (offers, type) => {
 
   return (
     `<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
-            ${createOffersList(offersArray, type)}
+            ${createOffersList(offers, type)}
           </div>
         </section>`
   );
@@ -204,7 +204,6 @@ export default class PointEdit extends SmartView {
     this._setFavoriteClickHandler();
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
-    this._setOffersChangeHandler();
   }
 
   _getTemplate() {
@@ -213,6 +212,7 @@ export default class PointEdit extends SmartView {
 
   _submitHandler(evt) {
     evt.preventDefault();
+    this._offersChangeHandler();
     this._callback.submit(this._data);
   }
 
@@ -257,26 +257,21 @@ export default class PointEdit extends SmartView {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
   }
 
-  _offersChangeHandler(evt) {
-    evt.preventDefault();
-    this._data.offers = [];
+  _offersChangeHandler() {
+    this._data.offers = {};
     const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
     selectedOffers.forEach((offer) => {
       let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
-      this._data.offers.push(OFFERS.find((item) => item.title === title));
+      let newObject = Object.fromEntries(Object.entries(OFFERS).filter(([_, value]) => value.title === title));
+      Object.assign(this._data.offers, newObject);
     });
     this.updateData({offers: this._data.offers});
-  }
-
-  _setOffersChangeHandler() {
-    this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersChangeHandler);
   }
 
   restoreHandlers() {
     this._setFavoriteClickHandler();
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
-    this._setOffersChangeHandler();
     this.setSubmitHandler(this._callback.submit);
   }
 

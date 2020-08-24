@@ -10,13 +10,10 @@ const createTripInfoTemplate = (points) => {
     ? formatDateMonthDay(tripEndDate)
     : `${(`0` + tripEndDate.getDate()).slice(-2)}`;
 
+
   const getOffersPrice = (point) => {
-    let total = 0;
-    if (point.offers.length) {
-      total = point.offers.reduce((offersTotal, offer) =>
-        offersTotal + offer.price, 0);
-    }
-    return total;
+    return Object.keys(point.offers).reduce((offersTotal, key) =>
+      offersTotal + point.offers[key].price || 0, 0);
   };
 
   const totalPrice = points.reduce((pointsTotal, point) =>

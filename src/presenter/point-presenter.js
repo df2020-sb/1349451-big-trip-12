@@ -17,7 +17,7 @@ export default class PointPresenter {
     this._mode = Mode.DEFAULT;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handleChevronClick = this._handleChevronClick.bind(this);
+    this._handleEditControlClick = this._handleEditControlClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
@@ -30,7 +30,7 @@ export default class PointPresenter {
     this._pointComponent = new Point(point);
     this._pointEditComponent = new PointEdit(point);
 
-    this._pointComponent.setChevronClickHandler(this._handleChevronClick);
+    this._pointComponent.setEditControlClickHandler(this._handleEditControlClick);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -40,9 +40,7 @@ export default class PointPresenter {
 
     if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, prevPointComponent);
-    }
-
-    if (this._mode === Mode.EDITING) {
+    } else {
       replace(this._pointEditComponent, prevPointEditComponent);
     }
 
@@ -72,7 +70,7 @@ export default class PointPresenter {
     }
   }
 
-  _handleChevronClick() {
+  _handleEditControlClick() {
     this._replacePointToForm();
   }
 

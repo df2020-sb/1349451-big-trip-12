@@ -12,10 +12,10 @@ export const getTypesByCategory = (category) => {
 };
 
 export const getAvailableOffers = (type) => {
-  let result = [];
+  let result = {};
   let offerCategories = POINT_TYPES.find((item) => item.type === type).offerCategories;
   if (offerCategories.length) {
-    result = OFFERS.filter((item) => offerCategories.includes(item.category));
+    result = Object.assign({}, ...offerCategories.map((key) => ({[key]: OFFERS[key]})));
   }
   return result;
 };
@@ -45,7 +45,7 @@ export const createPoint = () => {
   const endDate = createEndDate(startDate);
   const duration = endDate - startDate;
   const availableOffers = getAvailableOffers(type);
-
+  const randomOffersArray = getRandomUniqueArrayElements(Object.entries(availableOffers));
 
   return {
     id: generateId(),
@@ -55,7 +55,7 @@ export const createPoint = () => {
     startDate,
     endDate,
     duration,
-    offers: getRandomUniqueArrayElements(availableOffers),
+    offers: Object.fromEntries(randomOffersArray),
     isFavorite: (!!getRandomInteger(0, 1)),
     destination: {
       description: createDescription(),

@@ -15,7 +15,7 @@ const renderTripInfo = (points) => {
   const prevTripInfoComponent = tripInfoComponent;
   tripInfoComponent = new TripInfo(points);
 
-  if (prevTripInfoComponent === null) {
+  if (!prevTripInfoComponent) {
     render(main, tripInfoComponent, RenderPosition.AFTERBEGIN);
     return;
   }

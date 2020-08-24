@@ -13,11 +13,11 @@ const createPointTemplate = (point) => {
   const formattedEndTime = formatTime(endDate);
   const formattedDuration = formatDuration(duration);
 
-  const createOffersList = (offersArray) => {
-    return offersArray.slice(0, 3).map((offer) =>
+  const createOffersList = (pointOffers) => {
+    return Object.entries(pointOffers).slice(0, 3).map(([_, value]) =>
       `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-title">${value.title}</span>
+        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${value.price}</span>
         </li>`).join(``);
   };
 
@@ -72,7 +72,7 @@ export default class Point extends AbstractView {
     this._callback.rollupCkick();
   }
 
-  setChevronClickHandler(callback) {
+  setEditControlClickHandler(callback) {
     this._callback.rollupCkick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._chevronClickHandler);
   }
