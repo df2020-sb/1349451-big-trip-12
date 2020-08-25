@@ -1,5 +1,6 @@
 import {formatDateMonthDay} from '../utils/date';
 import AbstractView from './abstract';
+import {OFFERS} from '../const.js';
 
 const createTripInfoTemplate = (points) => {
 
@@ -10,10 +11,13 @@ const createTripInfoTemplate = (points) => {
     ? formatDateMonthDay(tripEndDate)
     : `${(`0` + tripEndDate.getDate()).slice(-2)}`;
 
-
   const getOffersPrice = (point) => {
-    return Object.keys(point.offers).reduce((offersTotal, key) =>
-      offersTotal + point.offers[key].price || 0, 0);
+    let total = 0;
+    if (point.offers.length) {
+      total = point.offers.reduce((offersTotal, offer) =>
+        offersTotal + OFFERS[offer].price, 0);
+    }
+    return total;
   };
 
   const totalPrice = points.reduce((pointsTotal, point) =>

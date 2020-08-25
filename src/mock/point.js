@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomArrayElement, getRandomUniqueArrayElements} from '../utils/common';
-import {POINT_TYPES, CITIES, MOCK_DESCRIPTION, OFFERS} from '../const.js';
+import {POINT_TYPES, CITIES, MOCK_DESCRIPTION} from '../const.js';
 
 
 export const createDescription = () => {
@@ -12,12 +12,7 @@ export const getTypesByCategory = (category) => {
 };
 
 export const getAvailableOffers = (type) => {
-  let result = {};
-  let offerCategories = POINT_TYPES.find((item) => item.type === type).offerCategories;
-  if (offerCategories.length) {
-    result = Object.assign({}, ...offerCategories.map((key) => ({[key]: OFFERS[key]})));
-  }
-  return result;
+  return POINT_TYPES.find((item) => item.type === type).offerCategories;
 };
 
 const createStartDate = () => {
@@ -44,8 +39,6 @@ export const createPoint = () => {
   const startDate = createStartDate();
   const endDate = createEndDate(startDate);
   const duration = endDate - startDate;
-  const availableOffers = getAvailableOffers(type);
-  const randomOffersArray = getRandomUniqueArrayElements(Object.entries(availableOffers));
 
   return {
     id: generateId(),
@@ -55,7 +48,7 @@ export const createPoint = () => {
     startDate,
     endDate,
     duration,
-    offers: Object.fromEntries(randomOffersArray),
+    offers: getRandomUniqueArrayElements(getAvailableOffers(type)),
     isFavorite: (!!getRandomInteger(0, 1)),
     destination: {
       description: createDescription(),

@@ -1,6 +1,7 @@
 import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
 import {getTypesByCategory} from '../mock/point';
 import AbstractView from './abstract';
+import {OFFERS} from '../const';
 
 const createPointTemplate = (point) => {
 
@@ -14,10 +15,10 @@ const createPointTemplate = (point) => {
   const formattedDuration = formatDuration(duration);
 
   const createOffersList = (pointOffers) => {
-    return Object.entries(pointOffers).slice(0, 3).map(([_, value]) =>
+    return pointOffers.slice(0, 3).map((offer) =>
       `<li class="event__offer">
-        <span class="event__offer-title">${value.title}</span>
-        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${value.price}</span>
+        <span class="event__offer-title">${OFFERS[offer].title}</span>
+        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${OFFERS[offer].price}</span>
         </li>`).join(``);
   };
 

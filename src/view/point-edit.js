@@ -110,13 +110,13 @@ const createPriceTemplate = (price) => {
 
 
 const createOffersList = (offers, type) => {
-  return Object.entries(getAvailableOffers(type)).map(([category, offer]) =>
+  return getAvailableOffers(type).map((offer) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${category}-1" type="checkbox" name="event-offer-${category}" ${offers.hasOwnProperty(category) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${category}-1">
-            <span class="event__offer-title">${offer.title}</span>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer}-1" type="checkbox" name="event-offer-${offer}" ${offers.includes(offer) ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${offer}-1">
+            <span class="event__offer-title">${OFFERS[offer].title}</span>
             &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+          &euro;&nbsp;<span class="event__offer-price">${OFFERS[offer].price}</span>
           </label>
       </div>`).join(``);
 };
@@ -258,12 +258,11 @@ export default class PointEdit extends SmartView {
   }
 
   _offersChangeHandler() {
-    this._data.offers = {};
+    this._data.offers = [];
     const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
     selectedOffers.forEach((offer) => {
       let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
-      let newObject = Object.fromEntries(Object.entries(OFFERS).filter(([_, value]) => value.title === title));
-      Object.assign(this._data.offers, newObject);
+      this._data.offers.push(Object.keys(OFFERS).find((key) => OFFERS[key].title === title));
     });
     this.updateData({offers: this._data.offers});
   }
