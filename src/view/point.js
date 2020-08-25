@@ -1,11 +1,12 @@
-import {POINT_TYPES} from '../const.js';
 import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
+import {getTypesByCategory} from '../mock/point';
 import AbstractView from './abstract';
+import {OFFERS} from '../const';
 
 const createPointTemplate = (point) => {
 
   const {type, city, price, startDate, endDate, duration, offers} = point;
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in` : `${type} to`;
+  const pointTypeString = getTypesByCategory(`activities`).includes(type) ? `${type} in ` : `${type} to`;
 
   const formattedStartDate = formatDateWithDashes(startDate);
   const formattedStartTime = formatTime(startDate);
@@ -13,11 +14,11 @@ const createPointTemplate = (point) => {
   const formattedEndTime = formatTime(endDate);
   const formattedDuration = formatDuration(duration);
 
-  const createOffersList = (offersArray) => {
-    return offersArray.slice(0, 3).map((offer) =>
+  const createOffersList = (pointOffers) => {
+    return pointOffers.slice(0, 3).map((offer) =>
       `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-title">${OFFERS[offer].title}</span>
+        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${OFFERS[offer].price}</span>
         </li>`).join(``);
   };
 
@@ -60,28 +61,20 @@ export default class Point extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._chevronClickHandler = this._chevronClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  _rollupClickHandler(evt) {
+  _chevronClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollupCkick();
   }
 
-  setRollupClickHandler(callback) {
+  setEditControlClickHandler(callback) {
     this._callback.rollupCkick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
-  }
-
-  removeEvtHandler() {
-    this._callback.removeEvt();
-  }
-
-  setRemoveEvtHandler(callback) {
-    this._callback.removeEvt = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._chevronClickHandler);
   }
 }

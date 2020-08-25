@@ -1,11 +1,11 @@
 import {SortType} from "../const.js";
-import {render, RenderPosition, replace} from '../utils/render';
+import {render, RenderPosition, remove} from '../utils/render';
+import {updateArrayItem} from '../utils/common';
 import {sortByPrice, sortByTime} from '../utils/sort';
 import Sort from '../view/sort';
 import Day from '../view/day';
 import DaysList from '../view/days-list';
-import Point from '../view/point';
-import PointEdit from '../view/point-edit';
+import PointPresenter from './point-presenter';
 import NoPoints from '../view/no-points';
 
 
@@ -36,18 +36,26 @@ const createDaysArray = (points) => {
 
 export default class Trip {
 
-  constructor(container, points) {
+  constructor(container, points, changeTripInfo) {
     this._points = [...points];
     this._receivedPoints = [...points];
+    this._daysArray = [];
+    this._renderedDays = [];
+    this._pointPresenter = {};
+    this._changeTripInfo = changeTripInfo;
 
     this._container = container;
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
     this._noPointsComponent = new NoPoints();
     this._currentSortType = SortType.DEFAULT;
+
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._renderedPoints = [];
+    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
+
   }
+
   _renderSort() {
     render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeSelectHandler(this._handleSortTypeChange);
@@ -58,43 +66,9 @@ export default class Trip {
   }
 
   _renderPoint(pointsContainer, point) {
-    const pointComponent = new Point(point);
-    const pointEditComponent = new PointEdit(point);
-
-    const replacePointToForm = () => {
-      replace(pointEditComponent, pointComponent);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(pointComponent, pointEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    const removeEscListener = () => {
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    pointComponent.setRemoveEvtHandler(removeEscListener);
-
-    pointComponent.setRollupClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    pointEditComponent.setSubmitHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    this._renderedPoints.push(pointComponent);
-    render(pointsContainer, pointComponent, RenderPosition.BEFOREEND);
+    const pointPresenter = new PointPresenter(pointsContainer, this._handlePointChange, this._handleModeChange);
+    pointPresenter.init(point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
 
   _renderPoints(dayComponent, points) {
@@ -102,20 +76,25 @@ export default class Trip {
     points.forEach((point) => this._renderPoint(pointsContainer, point));
   }
 
-  _renderSortedPoints() {
-    const dayComponent = new Day();
+  _renderDay(points, date, index) {
+    const dayComponent = new Day(date, index);
     render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
-    this._renderPoints(dayComponent, this._points);
+    this._renderedDays.push(dayComponent);
+    this._renderPoints(dayComponent, points);
   }
 
   _renderDays() {
-    const daysArray = createDaysArray(this._points);
+    this._daysArray = createDaysArray(this._points);
     let dayNumber = 0;
-    daysArray.forEach((day) => {
-      const dayComponent = new Day(day.date, ++dayNumber);
-      render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
-      this._renderPoints(dayComponent, day.points);
+    this._daysArray.forEach((day) => {
+      this._renderDay(day.points, day.date, ++dayNumber);
     });
+  }
+
+  _clearDays() {
+    this._renderedDays.forEach((dayComponent) => remove(dayComponent));
+    this._renderedDays = [];
+    this._pointPresenter = {};
   }
 
   _handleSortTypeChange(sortType) {
@@ -124,19 +103,16 @@ export default class Trip {
       return;
     }
 
-    this._daysListComponent.getElement().innerHTML = ``;
-    this._renderedPoints.forEach((point) => {
-      point.removeEvtHandler();
-    });
+    this._clearDays();
 
     switch (sortType) {
       case SortType.TIME:
         this._points.sort(sortByTime);
-        this._renderSortedPoints();
+        this._renderDay(this._points);
         break;
       case SortType.PRICE:
         this._points.sort(sortByPrice);
-        this._renderSortedPoints();
+        this._renderDay(this._points);
         break;
       default:
         this._points = [...this._receivedPoints];
@@ -145,13 +121,25 @@ export default class Trip {
     this._currentSortType = sortType;
   }
 
+  _handlePointChange(updatedPoint) {
+    this._points = updateArrayItem(this._points, updatedPoint);
+    this._receivedPoints = updateArrayItem(this._receivedPoints, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
+    this._changeTripInfo(this._points);
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   init() {
 
-    if (this._points.length === 0) {
+    if (!this._points.length) {
       render(this._container, this._noPointsComponent, RenderPosition.AFTERBEGIN);
       return;
     }
-
     this._renderDaysList();
     this._renderSort();
     this._renderDays();
