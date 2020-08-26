@@ -1,7 +1,6 @@
 import {getRandomInteger, getRandomArrayElement, getRandomUniqueArrayElements} from '../utils/common';
 import {POINT_TYPES, CITIES, MOCK_DESCRIPTION} from '../const.js';
 
-
 export const createDescription = () => {
   const phraseArray = MOCK_DESCRIPTION.split(`.`);
   return (new Array(getRandomInteger(1, 5)).fill().map(() => getRandomArrayElement(phraseArray))).join(`. `);

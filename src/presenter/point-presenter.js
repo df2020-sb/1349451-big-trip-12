@@ -54,6 +54,7 @@ export default class PointPresenter {
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
+    this._pointEditComponent.setDatepickers();
   }
 
   _replaceFormToPoint() {

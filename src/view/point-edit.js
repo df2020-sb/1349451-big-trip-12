@@ -1,8 +1,11 @@
+/* eslint-disable indent */
 import {CITIES, OFFERS} from '../const.js';
-import {formatDateWithSlashes, formatTime} from '../utils/date';
 import {getRandomInteger} from '../utils/common';
 import {createDescription, getTypesByCategory, getAvailableOffers} from '../mock/point';
 import SmartView from "./smart.js";
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import moment from "moment";
 
 
 const EMPTY_POINT = {
@@ -84,12 +87,12 @@ const createDatesTemplate = (startDate, endDate) => {
   <label class="visually-hidden" for="event-start-time-1">
     From
       </label>
-  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDateWithSlashes(startDate)} ${formatTime(startDate)}">
+  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${moment(startDate).format(`DD/MM/YYYY`)} ${moment(startDate).format(`HH:mm`)}">
     &mdash;
       <label class="visually-hidden" for="event-end-time-1">
       To
       </label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDateWithSlashes(endDate)} ${formatTime(endDate)}">
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${moment(endDate).format(`DD/MM/YYYY`)} ${moment(endDate).format(`HH:mm`)}">
     </div>`
   );
 };
@@ -196,39 +199,53 @@ export default class PointEdit extends SmartView {
   constructor(point = EMPTY_POINT) {
     super();
     this._data = point;
+    this._startDatepicker = null;
+    this._endDatepicker = null;
+
     this._submitHandler = this._submitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+
     this._setFavoriteClickHandler();
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
+
   }
 
   _getTemplate() {
     return createPointEditTemplate(this._data);
   }
 
+
   _submitHandler(evt) {
     evt.preventDefault();
     this._offersChangeHandler();
+    this.destroyPicker(this._startDatepicker);
+    this.destroyPicker(this._endDatepicker);
     this._callback.submit(this._data);
   }
+
 
   setSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._submitHandler);
   }
 
+
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this.updateData({isFavorite: !this._data.isFavorite});
   }
 
+
   _setFavoriteClickHandler() {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
+
 
   _typeChangeHandler(evt) {
     evt.preventDefault();
@@ -239,6 +256,7 @@ export default class PointEdit extends SmartView {
   _setTypeChangeHandler() {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._typeChangeHandler);
   }
+
 
   _destinationChangeHandler(evt) {
     if (evt.target.value !== this._data.city) {
@@ -253,9 +271,11 @@ export default class PointEdit extends SmartView {
     }
   }
 
+
   _setDestinationChangeHandler() {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
   }
+
 
   _offersChangeHandler() {
     this._data.offers = [];
@@ -267,10 +287,67 @@ export default class PointEdit extends SmartView {
     this.updateData({offers: this._data.offers});
   }
 
+
+  _startDateChangeHandler(selectedDates) {
+    this.updateData({
+      startDate: selectedDates[0]
+    });
+
+    if (moment(this._data.startDate).isAfter(this._data.endDate)) {
+      this.updateData({
+        endDate: this._data.startDate
+      });
+    }
+  }
+
+
+  _endDateChangeHandler(selectedDates) {
+    this.updateData({
+      endDate: selectedDates[0],
+    });
+  }
+
+
+  setDatepickers() {
+    this.destroyPicker(this._startDatepicker);
+    this.destroyPicker(this._endDatepicker);
+
+    this._startDatepicker = flatpickr(this.getElement()
+      .querySelector(`#event-start-time-1`),
+      {
+        enableTime: true,
+        dateFormat: `d/m/Y H:i`,
+        defaultDate: this._data.startDate,
+        onChange: this._startDateChangeHandler
+      }
+    );
+
+    this._endDatepicker = flatpickr(this.getElement()
+      .querySelector(`#event-end-time-1`),
+      {
+        enableTime: true,
+        dateFormat: `d/m/Y H:i`,
+        defaultDate: this._data.endDate,
+        minDate: this._data.startDate,
+        onChange: this._endDateChangeHandler
+      }
+    );
+  }
+
+
+  destroyPicker(datepicker) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+  }
+
+
   restoreHandlers() {
     this._setFavoriteClickHandler();
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
+    this.setDatepickers();
     this.setSubmitHandler(this._callback.submit);
   }
 

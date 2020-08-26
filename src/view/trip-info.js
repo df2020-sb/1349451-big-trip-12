@@ -1,15 +1,15 @@
-import {formatDateMonthDay} from '../utils/date';
 import AbstractView from './abstract';
 import {OFFERS} from '../const.js';
+import moment from "moment";
 
 const createTripInfoTemplate = (points) => {
-
   const tripStartDate = points[0].startDate;
   const tripEndDate = points[points.length - 1].endDate;
-  const tripStartDateString = formatDateMonthDay(tripStartDate);
+  const tripStartDateString = moment(tripStartDate).format(`MMM DD`);
   const tripEndDateString = tripStartDate.getMonth() !== tripEndDate.getMonth()
-    ? formatDateMonthDay(tripEndDate)
-    : `${(`0` + tripEndDate.getDate()).slice(-2)}`;
+    ? moment(tripEndDate).format(`MMM DD`)
+    : `${moment(tripEndDate).format(`DD`)}`;
+
 
   const getOffersPrice = (point) => {
     let total = 0;
