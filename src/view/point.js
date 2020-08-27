@@ -13,12 +13,12 @@ const createPointTemplate = (point) => {
   const formattedEndtDate = moment(endDate).format(`YYYY-MM-DD`);
   const formattedEndTime = moment(endDate).format(`HH:mm`);
 
-  const duration = endDate - startDate;
-  const days = moment.duration(duration).days();
+  const duration = moment.duration(endDate - startDate);
+  const days = duration.days();
   const daysString = days > 0 ? `${(`0` + days.toString()).slice(-2)}D ` : ``;
-  const hours = moment.duration(duration).hours();
+  const hours = duration.hours();
   const hoursString = hours > 0 ? `${(`0` + hours.toString()).slice(-2)}H ` : ``;
-  const minutes = moment.duration(duration).minutes();
+  const minutes = duration.minutes();
   const minutesString = minutes > 0 ? `${(`0` + minutes.toString()).slice(-2)}M` : ``;
 
   const createOffersList = (pointOffers) => {
