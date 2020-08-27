@@ -16,12 +16,16 @@ const compareNullAttributes = (attributeA, attributeB) => {
 
 
 export const sortByTime = (pointA, pointB) => {
-  let compareResult = compareNullAttributes(pointA.duration, pointB.duration);
+
+  const durationA = pointA.endDate - pointA.startDate;
+  const durationB = pointB.endDate - pointB.startDate;
+
+  let compareResult = compareNullAttributes(durationA, durationB);
 
   if (compareResult !== null) {
     return compareResult;
   }
-  return pointB.duration - pointA.duration;
+  return durationB - durationA;
 };
 
 export const sortByPrice = (pointA, pointB) => {

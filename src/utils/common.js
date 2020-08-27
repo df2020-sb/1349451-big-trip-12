@@ -33,21 +33,3 @@ export const updateArrayItem = (array, update) => {
   ];
 };
 
-export const formatDuration = (duration) => {
-
-  let deltaInSeconds = duration / 1000;
-
-  const days = Math.floor(deltaInSeconds / 86400);
-  const daysString = days > 0 ? `${(`0` + days.toString()).slice(-2)}D` : ``;
-  deltaInSeconds -= days * 86400;
-
-  let hours = Math.floor(deltaInSeconds / 3600);
-  const hoursString = hours > 0 ? `${(`0` + hours.toString()).slice(-2)}H` : ``;
-  deltaInSeconds -= hours * 3600;
-
-  let minutes = Math.floor(deltaInSeconds / 60);
-  const minutesString = minutes > 0 ? `${(`0` + minutes.toString()).slice(-2)}M` : ``;
-  deltaInSeconds -= minutes * 60;
-
-  return `${daysString} ${hoursString} ${minutesString}`;
-};

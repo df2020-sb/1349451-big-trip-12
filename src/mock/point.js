@@ -37,7 +37,6 @@ export const createPoint = () => {
   const type = getRandomArrayElement(POINT_TYPES).type;
   const startDate = createStartDate();
   const endDate = createEndDate(startDate);
-  const duration = endDate - startDate;
 
   return {
     id: generateId(),
@@ -46,7 +45,6 @@ export const createPoint = () => {
     price: getRandomInteger(10, 1000),
     startDate,
     endDate,
-    duration,
     offers: getRandomUniqueArrayElements(getAvailableOffers(type)),
     isFavorite: (!!getRandomInteger(0, 1)),
     destination: {
