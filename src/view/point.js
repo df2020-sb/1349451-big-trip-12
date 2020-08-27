@@ -1,18 +1,25 @@
-import {formatDateWithDashes, formatTime, formatDuration} from '../utils/date';
 import {getTypesByCategory} from '../mock/point';
 import AbstractView from './abstract';
 import {OFFERS} from '../const';
+import moment from "moment";
 
 const createPointTemplate = (point) => {
 
-  const {type, city, price, startDate, endDate, duration, offers} = point;
+  const {type, city, price, startDate, endDate, offers} = point;
   const pointTypeString = getTypesByCategory(`activities`).includes(type) ? `${type} in ` : `${type} to`;
 
-  const formattedStartDate = formatDateWithDashes(startDate);
-  const formattedStartTime = formatTime(startDate);
-  const formattedEndtDate = formatDateWithDashes(endDate);
-  const formattedEndTime = formatTime(endDate);
-  const formattedDuration = formatDuration(duration);
+  const formattedStartDate = moment(startDate).format(`YYYY-MM-DD`);
+  const formattedStartTime = moment(startDate).format(`HH:mm`);
+  const formattedEndtDate = moment(endDate).format(`YYYY-MM-DD`);
+  const formattedEndTime = moment(endDate).format(`HH:mm`);
+
+  const duration = moment.duration(endDate - startDate);
+  const days = duration.days();
+  const daysString = days > 0 ? `${(`0` + days.toString()).slice(-2)}D ` : ``;
+  const hours = duration.hours();
+  const hoursString = hours > 0 ? `${(`0` + hours.toString()).slice(-2)}H ` : ``;
+  const minutes = duration.minutes();
+  const minutesString = minutes > 0 ? `${(`0` + minutes.toString()).slice(-2)}M` : ``;
 
   const createOffersList = (pointOffers) => {
     return pointOffers.slice(0, 3).map((offer) =>
@@ -36,23 +43,23 @@ const createPointTemplate = (point) => {
           &mdash;
           <time class="event__end-time" datetime="${formattedEndtDate}T${formattedEndTime}">${formattedEndTime}</time>
         </p>
-        <p class="event__duration">${formattedDuration}</p>
-      </div>
+        <p class="event__duration">${daysString}${hoursString}${minutesString}</p>
+      </div >
 
-      <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${price}</span>
-      </p>
+  <p class="event__price">
+    &euro;&nbsp;<span class="event__price-value">${price}</span>
+  </p>
 
-      <h4 class="visually-hidden">Offers:</h4>
-      <ul class="event__selected-offers">
-        ${createOffersList(offers)}
-      </ul>
+  <h4 class="visually-hidden">Offers:</h4>
+  <ul class="event__selected-offers">
+    ${createOffersList(offers)}
+  </ul>
 
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
-    </div>
-  </li>`
+  <button class="event__rollup-btn" type="button">
+    <span class="visually-hidden">Open event</span>
+  </button>
+    </div >
+  </li > `
   );
 };
 

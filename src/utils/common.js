@@ -32,3 +32,4 @@ export const updateArrayItem = (array, update) => {
   return [...array.slice(0, index), update, ...array.slice(index + 1)
   ];
 };
+

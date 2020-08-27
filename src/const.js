@@ -25,9 +25,6 @@ export const OFFERS = {
   train: {title: `Travel by train`, price: 40},
 };
 
-export const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`,
-  `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`
-];
 
 export const FILTER = {
   everything: true,

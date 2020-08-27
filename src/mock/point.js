@@ -1,7 +1,6 @@
 import {getRandomInteger, getRandomArrayElement, getRandomUniqueArrayElements} from '../utils/common';
 import {POINT_TYPES, CITIES, MOCK_DESCRIPTION} from '../const.js';
 
-
 export const createDescription = () => {
   const phraseArray = MOCK_DESCRIPTION.split(`.`);
   return (new Array(getRandomInteger(1, 5)).fill().map(() => getRandomArrayElement(phraseArray))).join(`. `);
@@ -38,7 +37,6 @@ export const createPoint = () => {
   const type = getRandomArrayElement(POINT_TYPES).type;
   const startDate = createStartDate();
   const endDate = createEndDate(startDate);
-  const duration = endDate - startDate;
 
   return {
     id: generateId(),
@@ -47,7 +45,6 @@ export const createPoint = () => {
     price: getRandomInteger(10, 1000),
     startDate,
     endDate,
-    duration,
     offers: getRandomUniqueArrayElements(getAvailableOffers(type)),
     isFavorite: (!!getRandomInteger(0, 1)),
     destination: {
