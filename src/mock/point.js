@@ -31,7 +31,7 @@ const createEndDate = (date) => {
   return new Date(endDate);
 };
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const createPoint = () => {
   const type = getRandomArrayElement(POINT_TYPES).type;

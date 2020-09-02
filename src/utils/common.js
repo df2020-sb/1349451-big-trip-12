@@ -1,3 +1,6 @@
+import moment from "moment";
+
+
 export const getRandomInteger = (a, b) => {
   const min = Math.ceil(Math.min(a, b));
   const max = Math.floor(Math.max(a, b));
@@ -22,14 +25,9 @@ export const getRandomUniqueArrayElements = (array) => {
   return result;
 };
 
-export const updateArrayItem = (array, update) => {
-  const index = array.findIndex((item) => item.id === update.id);
 
-  if (index === -1) {
-    return array;
-  }
-
-  return [...array.slice(0, index), update, ...array.slice(index + 1)
-  ];
+export const isDatesEqual = (dateA, dateB) => {
+  return moment(dateA).isSame(dateB);
 };
+
 

@@ -1,6 +1,11 @@
+/* eslint-disable indent */
 import Point from '../view/point';
 import PointEdit from '../view/point-edit';
 import {render, RenderPosition, replace, remove} from '../utils/render';
+import {isDatesEqual} from '../utils/common';
+import {UserAction, UpdateType} from "../const";
+import OffersModel from '../model/offers';
+import {renderOffers} from '../view/point-edit';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -14,11 +19,21 @@ export default class PointPresenter {
     this._container = container;
     this._pointComponent = null;
     this._pointEditComponent = null;
+    this._availableOffers = {};
     this._mode = Mode.DEFAULT;
+
+    this._offersModel = new OffersModel();
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleEditControlClick = this._handleEditControlClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+
+    this._handleAction = this._handleAction.bind(this);
+    this._handleModelUpdate = this._handleModelUpdate.bind(this);
+
+    this._offersModel.addObserver(this._handleModelUpdate);
   }
 
   init(point) {
@@ -27,11 +42,21 @@ export default class PointPresenter {
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
+    this._offersModel.setOffers(this._point.type);
+    this._availableOffers = this._offersModel.getOffers();
+    renderOffers(this._availableOffers);
+
     this._pointComponent = new Point(point);
-    this._pointEditComponent = new PointEdit(point);
+    this._pointEditComponent = new PointEdit(point, this._handleAction, false);
 
     this._pointComponent.setEditControlClickHandler(this._handleEditControlClick);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
+
+    if (this._pointEditComponent.getElement().querySelector(`.event__rollup-btn`)) {
+      this._pointEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
+    }
+
+    this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this._container, this._pointComponent, RenderPosition.BEFOREEND);
@@ -75,20 +100,50 @@ export default class PointPresenter {
     this._replacePointToForm();
   }
 
-  _handleSubmit(point) {
-    this._changeData(point);
+  _handleCloseEditClick() {
+    this._pointEditComponent.reset(this._point);
     this._replaceFormToPoint();
+  }
 
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.TRIP,
+      point
+    );
+  }
+
+  _handleSubmit(update) {
+    const isTripUpdate =
+      !isDatesEqual(this._point.startDate, update.startDate)
+      || !isDatesEqual(this._point.endDate, update.endDate)
+      || this._point.price !== update.price;
+
+    this._changeData(UserAction.UPDATE_POINT,
+      isTripUpdate ? UpdateType.TRIP : UpdateType.POINT,
+      update);
+
+    this._replaceFormToPoint();
   }
 
   destroy() {
     remove(this._pointComponent);
     remove(this._pointEditComponent);
+    this.OffersModel.removeObserver(this._handleOffersModelUpdate);
   }
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToPoint();
     }
+  }
+
+  _handleAction(type) {
+    this._offersModel.setOffers(type);
+  }
+
+  _handleModelUpdate() {
+    this._availableOffers = this._offersModel.getOffers();
+    renderOffers(this._availableOffers);
   }
 }

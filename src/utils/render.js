@@ -47,10 +47,15 @@ export const replace = (newElement, oldElement) => {
   if (parent === null || newElement === null) {
     throw new Error(`Can't replace unexisting elements`);
   }
+
   parent.replaceChild(newElement, oldElement);
 };
 
 export const remove = (element) => {
+  if (element === null) {
+    return;
+  }
+
   if (!(element instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }
