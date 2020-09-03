@@ -5,7 +5,6 @@ import {generateId} from '../mock/point';
 import {render, RenderPosition, remove} from '../utils/render';
 import {UserAction, UpdateType} from "../const";
 import OffersModel from '../model/offers';
-import PointsModel from '../model/points';
 import {renderOffers} from '../view/point-edit';
 
 const addButton = document.querySelector(`.trip-main__event-add-btn`);
@@ -28,7 +27,6 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._offersModel = new OffersModel();
-    this._pointsModel = new PointsModel();
     this._availableOffers = {};
 
     this._pointEditComponent = null;
@@ -47,10 +45,8 @@ export default class PointNew {
     if (this._pointEditComponent !== null) {
       return;
     }
-
     addButton.disabled = true;
     this._availableOffers = this._offersModel.getOffers();
-    renderOffers(this._availableOffers);
     this._pointEditComponent = new PointEdit(EMPTY_POINT, this._handleAction, true);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -60,14 +56,14 @@ export default class PointNew {
   }
 
   destroy() {
-    if (this._pointEditComponent === null) {
+    if (!this._pointEditComponent) {
       return;
     }
-
     remove(this._pointEditComponent);
     this._pointEditComponent = null;
     this._container.parentElement.remove();
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    addButton.disabled = false;
   }
 
   _handleSubmit(point) {

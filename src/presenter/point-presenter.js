@@ -19,6 +19,7 @@ export default class PointPresenter {
     this._container = container;
     this._pointComponent = null;
     this._pointEditComponent = null;
+    this._initialOffers = {};
     this._availableOffers = {};
     this._mode = Mode.DEFAULT;
 
@@ -43,8 +44,6 @@ export default class PointPresenter {
     const prevPointEditComponent = this._pointEditComponent;
 
     this._offersModel.setOffers(this._point.type);
-    this._availableOffers = this._offersModel.getOffers();
-    renderOffers(this._availableOffers);
 
     this._pointComponent = new Point(point);
     this._pointEditComponent = new PointEdit(point, this._handleAction, false);
@@ -58,7 +57,7 @@ export default class PointPresenter {
 
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    if (prevPointComponent === null || prevPointEditComponent === null) {
+    if (!prevPointComponent || !prevPointEditComponent) {
       render(this._container, this._pointComponent, RenderPosition.BEFOREEND);
       return;
     }

@@ -106,6 +106,7 @@ const createPriceTemplate = (price) => {
 
 
 const createOffersList = (pointOffers, typeOffers) => {
+
   return Object.entries(typeOffers).map(([category, params]) =>
     `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${category}-1" type="checkbox" name="event-offer-${category}" ${pointOffers.includes(category) ? `checked` : ``}>
@@ -219,11 +220,13 @@ export default class PointEdit extends SmartView {
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
     this._setPriceChangeHandler();
-    this.setDeleteClickHandler(this._callback.deleteClick);
+    this._setOffersChangeHandler();
+
   }
 
 
   _getTemplate() {
+    this._updateOffers(this._data.type);
     return createPointEditTemplate(this._data, availableOffers, this._isNewPoint);
   }
 
@@ -235,7 +238,7 @@ export default class PointEdit extends SmartView {
     }
 
     this._isNewPoint = false;
-    this._offersChangeHandler();
+    // this._offersChangeHandler();
     this.destroyPicker(this._startDatepicker);
     this.destroyPicker(this._endDatepicker);
     this._callback.submit(this._data);
@@ -262,7 +265,6 @@ export default class PointEdit extends SmartView {
   _typeChangeHandler(evt) {
     evt.preventDefault();
     const type = this.getElement().querySelector(`label[for=${evt.target.id}]`).textContent.trim();
-    this._updateOffers(type);
     this.updateData({type});
 
   }
@@ -291,16 +293,24 @@ export default class PointEdit extends SmartView {
   }
 
 
-  _offersChangeHandler() {
-    this._data.offers = [];
-    const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
-    selectedOffers.forEach((offer) => {
-      let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
-      this._data.offers.push(Object.keys(this._availableOffers).find((key) => this._availableOffers[key].title === title));
-    });
-    this.updateData({offers: this._data.offers});
+  _offersChangeHandler(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      this._data.offers = [];
+      const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
+      selectedOffers.forEach((offer) => {
+        let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
+        this._data.offers.push(Object.keys(availableOffers).find((key) => availableOffers[key].title === title));
+      });
+
+      this.updateData({offers: this._data.offers});
+    }
   }
 
+  _setOffersChangeHandler() {
+    if (Object.keys(availableOffers).length) {
+      this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersChangeHandler);
+    }
+  }
 
   _closeEditClickHandler() {
     this._callback.editFormClose();
@@ -388,11 +398,12 @@ export default class PointEdit extends SmartView {
     if (this.getElement().querySelector(`.event__rollup-btn`)) {
       this.setCloseEditClickHandler(this._callback.editFormClose);
     }
-
+    this.setDeleteClickHandler(this._callback.deleteClick);
     this._setFavoriteClickHandler();
     this._setTypeChangeHandler();
     this._setDestinationChangeHandler();
     this._setPriceChangeHandler();
+    this._setOffersChangeHandler();
     this.setDatepickers();
     this.setSubmitHandler(this._callback.submit);
   }

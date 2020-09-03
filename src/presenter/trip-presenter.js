@@ -173,6 +173,9 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    if (Object.keys(this._pointNewPresenter).length) {
+      this._pointNewPresenter.destroy();
+    }
 
     Object
       .values(this._pointPresenter)
