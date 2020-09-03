@@ -21,7 +21,7 @@ const createTripInfoTemplate = (points) => {
   };
 
   const totalPrice = points.reduce((pointsTotal, point) =>
-    pointsTotal + point.price + getOffersPrice(point), 0);
+    pointsTotal + Number(point.price) + getOffersPrice(point), 0);
 
 
   const cities = points.map((point) => point.city);
@@ -44,7 +44,6 @@ const createTripInfoTemplate = (points) => {
 
     return middleCities;
   };
-
 
   return (
     `<section class="trip-main__trip-info  trip-info">

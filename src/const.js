@@ -26,14 +26,22 @@ export const OFFERS = {
 };
 
 
-export const FILTER = {
-  everything: true,
-  future: false,
-  past: false
-};
+export const filters = [`everything`, `future`, `past`];
 
 export const SortType = {
   DEFAULT: `default`,
   TIME: `time`,
   PRICE: `price`
+};
+
+export const UserAction = {
+  UPDATE_POINT: `UPDATE_POINT`,
+  ADD_POINT: `ADD_POINT`,
+  DELETE_POINT: `DELETE_POINT`
+};
+
+export const UpdateType = {
+  POINT: `POINT`,
+  TRIP: `TRIP`,
+  ALL: `ALL`
 };
