@@ -45,3 +45,22 @@ export const UpdateType = {
   TRIP: `TRIP`,
   ALL: `ALL`
 };
+
+
+export const MenuItem = {
+  TABLE: `TABLE`,
+  STATS: `STATS`
+};
+
+export const ICONS = new Map([
+  [`bus`, `🚌`],
+  [`check-in`, `🏨`],
+  [`drive`, `🚗`],
+  [`flight`, `✈️`],
+  [`restaurant`, `🍴`],
+  [`ship`, `🛳`],
+  [`sightseeing`, `🏛`],
+  [`taxi`, `🚕`],
+  [`train`, `🚂`],
+  [`transport`, `🚊`],
+]);

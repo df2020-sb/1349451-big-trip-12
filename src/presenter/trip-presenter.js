@@ -217,6 +217,19 @@ export default class Trip {
     }
   }
 
+  destroy() {
+    this._clearDays(true);
+
+    remove(this._daysListComponent);
+
+    this._pointsModel.removeObserver(this._handleUpdate);
+    this._filterModel.removeObserver(this._handleUpdate);
+
+    if (Object.keys(this._pointNewPresenter).length) {
+      this._pointNewPresenter.destroy();
+    }
+  }
+
   init() {
     this._renderDaysList();
     this._renderDays();
