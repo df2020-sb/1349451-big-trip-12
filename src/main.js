@@ -44,7 +44,7 @@ const filterModel = new FilterModel();
 const header = document.querySelector(`.trip-main`);
 const controls = document.querySelector(`.trip-controls`);
 const addButton = document.querySelector(`.trip-main__event-add-btn`);
-const menu = new Menu(MenuItem.TABLE);
+const menu = new Menu();
 
 const main = document.querySelector(`.page-main .page-body__container`);
 const tripContainer = new TripContainer();

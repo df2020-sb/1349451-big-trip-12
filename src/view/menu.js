@@ -13,24 +13,25 @@ const createMenuTemplate = () => {
   );
 };
 
+
 export default class Menu extends AbstractView {
 
-  constructor(activeTab) {
+  constructor() {
     super();
-    this._activeTab = activeTab;
     this._menuClickHandler = this._menuClickHandler.bind(this);
-    this._tabs = this.getElement().querySelectorAll(`.trip-tabs__btn`);
+    this._activeTabElement = this.getElement().querySelector(`[data-value=${MenuItem.TABLE}]`);
   }
 
   _getTemplate() {
-    return createMenuTemplate(this._activeTab);
+    return createMenuTemplate();
   }
 
   _menuClickHandler(evt) {
     evt.preventDefault();
-    if (evt.target.tagName === `A` && !evt.target.classList.contains(`trip-tabs__btn--active`)) {
-      this._tabs.forEach((element) => element.classList.remove(`trip-tabs__btn--active`));
-      evt.target.classList.add(`trip-tabs__btn--active`);
+    if (evt.target.tagName === `A` && evt.target !== this._activeTabElement) {
+      this._activeTabElement.classList.remove(`trip-tabs__btn--active`);
+      this._activeTabElement = evt.target;
+      this._activeTabElement.classList.add(`trip-tabs__btn--active`);
       this._callback.menuClick(evt.target.dataset.value);
     }
   }
@@ -41,8 +42,9 @@ export default class Menu extends AbstractView {
   }
 
   resetMenu() {
-    this._tabs.forEach((element) => element.classList.remove(`trip-tabs__btn--active`));
-    this.getElement().querySelector(`[data-value=${MenuItem.TABLE}]`).classList.add(`trip-tabs__btn--active`);
+    this._activeTabElement.classList.remove(`trip-tabs__btn--active`);
+    this._activeTabElement = this.getElement().querySelector(`[data-value=${MenuItem.TABLE}]`);
+    this._activeTabElement.classList.add(`trip-tabs__btn--active`);
     this._callback.menuClick(MenuItem.TABLE);
   }
 }
