@@ -42,7 +42,7 @@ export default class PointNew {
 
   init() {
 
-    if (this._pointEditComponent !== null) {
+    if (this._pointEditComponent) {
       return;
     }
     addButton.disabled = true;

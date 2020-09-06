@@ -95,7 +95,7 @@ export default class Trip {
 
   _renderSort() {
 
-    if (this._sortComponent !== null) {
+    if (this._sortComponent) {
       this._sortComponent = null;
     }
 

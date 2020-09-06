@@ -279,7 +279,7 @@ export default class Statistics extends SmartView {
 
   removeElement() {
     super.removeElement();
-    if (this._moneyChart !== null || this._transportChart !== null || this._timeChart !== null) {
+    if (this._moneyChart || this._transportChart || this._timeChart) {
       this._moneyChart.destroy();
       this._transportChart.destroy();
       this._timeChart.destroy();
@@ -296,7 +296,7 @@ export default class Statistics extends SmartView {
 
   _setCharts() {
 
-    if (this._moneyChart !== null || this._transportChart !== null || this._timeChart !== null) {
+    if (this._moneyChart || this._transportChart || this._timeChart) {
       this._moneyChart.destroy();
       this._transportChart.destroy();
       this._timeChart.destroy();
