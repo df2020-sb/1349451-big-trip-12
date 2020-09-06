@@ -6,7 +6,23 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from "moment";
 
-const BAR_HEIGHT = 55;
+const BarHeight = {
+  MONEY: 330,
+  TRANSPORT: 220,
+  TIME: 220,
+};
+
+const FontSize = {
+  LABEL: 13,
+  TITLE: 23,
+  TICK: 13
+};
+
+const BAR_THICKNESS = 44;
+
+const MIN_BAR_LENGTH = 50;
+
+const PADDING = 5;
 
 const moneyPerPointType = (points) => {
   let result = points.reduce((acc, point) => {
@@ -58,7 +74,7 @@ const renderMoneyChart = (moneyCtx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: FontSize.LABEL
           },
           color: `#000000`,
           anchor: `end`,
@@ -70,21 +86,21 @@ const renderMoneyChart = (moneyCtx, points) => {
         display: true,
         text: `MONEY`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: FontSize.TITLE,
         position: `left`
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: FontSize.TICK,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -95,7 +111,7 @@ const renderMoneyChart = (moneyCtx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: MIN_BAR_LENGTH
         }],
       },
       legend: {
@@ -127,7 +143,7 @@ const renderTransportChart = (transportCtx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: FontSize.LABEL
           },
           color: `#000000`,
           anchor: `end`,
@@ -139,21 +155,21 @@ const renderTransportChart = (transportCtx, points) => {
         display: true,
         text: `TRANSPORT`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: FontSize.TITLE,
         position: `left`
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: FontSize.TICK,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -164,7 +180,7 @@ const renderTransportChart = (transportCtx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: MIN_BAR_LENGTH
         }],
       },
       legend: {
@@ -196,7 +212,7 @@ const renderTimeChart = (timeCtx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: FontSize.LABEL
           },
           color: `#000000`,
           anchor: `end`,
@@ -208,21 +224,21 @@ const renderTimeChart = (timeCtx, points) => {
         display: true,
         text: `TRANSPORT`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: FontSize.TITLE,
         position: `left`
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: FontSize.TICK,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -233,7 +249,7 @@ const renderTimeChart = (timeCtx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: MIN_BAR_LENGTH
         }],
       },
       legend: {
@@ -303,13 +319,13 @@ export default class Statistics extends SmartView {
     }
 
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
-    moneyCtx.height = BAR_HEIGHT * 6;
+    moneyCtx.height = BarHeight.MONEY;
 
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
-    transportCtx.height = BAR_HEIGHT * 4;
+    transportCtx.height = BarHeight.TRANSPORT;
 
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
-    timeSpendCtx.height = BAR_HEIGHT * 4;
+    timeSpendCtx.height = BarHeight.TIME;
 
     this._moneyChart = renderMoneyChart(moneyCtx, this._points);
     this._transportChart = renderTransportChart(transportCtx, this._points);
