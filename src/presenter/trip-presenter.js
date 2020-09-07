@@ -95,7 +95,7 @@ export default class Trip {
 
   _renderSort() {
 
-    if (this._sortComponent !== null) {
+    if (this._sortComponent) {
       this._sortComponent = null;
     }
 
@@ -214,6 +214,19 @@ export default class Trip {
         this._renderDays();
         this._changeTripInfo(this._pointsModel.getPoints());
         break;
+    }
+  }
+
+  destroy() {
+    this._clearDays(true);
+
+    remove(this._daysListComponent);
+
+    this._pointsModel.removeObserver(this._handleUpdate);
+    this._filterModel.removeObserver(this._handleUpdate);
+
+    if (Object.keys(this._pointNewPresenter).length) {
+      this._pointNewPresenter.destroy();
     }
   }
 
