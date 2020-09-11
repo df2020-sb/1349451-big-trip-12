@@ -1,12 +1,14 @@
-import {getTypesByCategory} from '../mock/point';
+
 import AbstractView from './abstract';
-import {OFFERS} from '../const';
 import moment from "moment";
+import {POINT_TYPES} from '../const';
+import {capitalizeFirstLetter} from '../utils/common';
 
 const createPointTemplate = (point) => {
 
-  const {type, city, price, startDate, endDate, offers} = point;
-  const pointTypeString = getTypesByCategory(`activities`).includes(type) ? `${type} in ` : `${type} to`;
+  const {type, destination, price, startDate, endDate, offers} = point;
+  const capitalizedType = capitalizeFirstLetter(type);
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${capitalizedType} in ` : `${capitalizedType} to`;
 
   const formattedStartDate = moment(startDate).format(`YYYY-MM-DD`);
   const formattedStartTime = moment(startDate).format(`HH:mm`);
@@ -24,8 +26,8 @@ const createPointTemplate = (point) => {
   const createOffersList = (pointOffers) => {
     return pointOffers.slice(0, 3).map((offer) =>
       `<li class="event__offer">
-        <span class="event__offer-title">${OFFERS[offer].title}</span>
-        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${OFFERS[offer].price}</span>
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
         </li>`).join(``);
   };
 
@@ -33,9 +35,9 @@ const createPointTemplate = (point) => {
     `<li class="trip-events__item">
     <div class="event">
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${pointTypeString} ${city}</h3>
+      <h3 class="event__title">${pointTypeString} ${destination.name}</h3>
 
       <div class="event__schedule">
         <p class="event__time">
@@ -58,8 +60,8 @@ const createPointTemplate = (point) => {
   <button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Open event</span>
   </button>
-    </div >
-  </li > `
+    </div>
+  </li> `
   );
 };
 

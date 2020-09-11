@@ -1,16 +1,15 @@
 /* eslint-disable indent */
 import {POINT_TYPES} from '../const';
 import PointEdit from '../view/point-edit';
-import {generateId} from '../mock/point';
 import {render, RenderPosition, remove} from '../utils/render';
 import {UserAction, UpdateType} from "../const";
-import OffersModel from '../model/offers';
-import {renderOffers} from '../view/point-edit';
+import {renderOffer} from '../view/point-edit';
+import {renderDestination} from '../view/point-edit';
 
 const addButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const EMPTY_POINT = {
-  type: POINT_TYPES[0].type,
+  type: Object.values(POINT_TYPES)[0][0],
   city: ``,
   price: ``,
   startDate: null,
@@ -22,22 +21,28 @@ const EMPTY_POINT = {
 
 
 export default class PointNew {
-  constructor(container, changeData) {
+  constructor(container, destinationsModel, offersModel, changeData) {
     this._container = container;
     this._changeData = changeData;
 
-    this._offersModel = new OffersModel();
-    this._availableOffers = {};
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
+
+    this._currentOffer = {};
+    this._currentDestination = {};
 
     this._pointEditComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._handleAction = this._handleAction.bind(this);
-    this._handleModelUpdate = this._handleModelUpdate.bind(this);
+    this._handleOffersChange = this._handleOffersChange.bind(this);
+    this._handleOffersModelUpdate = this._handleOffersModelUpdate.bind(this);
+    this._handleDestinationChange = this._handleDestinationChange.bind(this);
+    this._handleDestinationsModelUpdate = this._handleDestinationsModelUpdate.bind(this);
 
-    this._offersModel.addObserver(this._handleModelUpdate);
+    this._offersModel.addObserver(this._handleOffersModelUpdate);
+    this._destinationsModel.addObserver(this._handleDestinationsModelUpdate);
   }
 
   init() {
@@ -46,8 +51,9 @@ export default class PointNew {
       return;
     }
     addButton.disabled = true;
-    this._availableOffers = this._offersModel.getOffers();
-    this._pointEditComponent = new PointEdit(EMPTY_POINT, this._handleAction, true);
+    this._availableOffers = this._offersModel.getOffer();
+    const allCities = this._destinationsModel._getAllCities() || [];
+    this._pointEditComponent = new PointEdit(EMPTY_POINT, allCities, this._handleOffersChange, this._handleDestinationChange, true);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     render(this._container, this._pointEditComponent, RenderPosition.AFTERBEGIN);
@@ -59,6 +65,8 @@ export default class PointNew {
     if (!this._pointEditComponent) {
       return;
     }
+    this._offersModel.removeObserver(this._handleOffersModelUpdate);
+    this._destinationsModel.removeObserver(this._handleDestinationsModelUpdate);
     remove(this._pointEditComponent);
     this._pointEditComponent = null;
     this._container.parentElement.remove();
@@ -70,8 +78,7 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.TRIP,
-      Object.assign({id: generateId()}, point)
-    );
+      point);
     this.destroy();
 
     addButton.disabled = false;
@@ -87,12 +94,21 @@ export default class PointNew {
       this.destroy();
     }
   }
-  _handleAction(type) {
-    this._offersModel.setOffers(type);
+  _handleOffersChange(type) {
+    this._offersModel.setCurrentOffer(type);
   }
 
-  _handleModelUpdate() {
-    this._availableOffers = this._offersModel.getOffers();
-    renderOffers(this._availableOffers);
+  _handleOffersModelUpdate() {
+    this._currentOffer = this._offersModel.getOffer();
+    renderOffer(this._currentOffer);
+  }
+
+  _handleDestinationChange(city) {
+    this._destinationsModel.setCurrentDestination(city);
+  }
+
+  _handleDestinationsModelUpdate() {
+    this._currentDestination = this._destinationsModel.getCurrentDestination();
+    renderDestination(this._currentDestination);
   }
 }

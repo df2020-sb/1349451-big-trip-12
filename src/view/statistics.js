@@ -1,7 +1,6 @@
 /* eslint-disable indent */
 import SmartView from './smart';
-import {ICONS} from '../const';
-import {getTypesByCategory} from '../mock/point';
+import {ICONS, POINT_TYPES} from '../const';
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from "moment";
@@ -24,6 +23,40 @@ const MIN_BAR_LENGTH = 50;
 
 const PADDING = 5;
 
+const options = {
+  scales: {
+    yAxes: [{
+      ticks: {
+        fontColor: `#000000`,
+        padding: PADDING,
+        fontSize: FontSize.TICK,
+      },
+      gridLines: {
+        display: false,
+        drawBorder: false
+      },
+      barThickness: BAR_THICKNESS,
+    }],
+    xAxes: [{
+      ticks: {
+        display: false,
+        beginAtZero: true,
+      },
+      gridLines: {
+        display: false,
+        drawBorder: false
+      },
+      minBarLength: MIN_BAR_LENGTH
+    }],
+  },
+  legend: {
+    display: false
+  },
+  tooltips: {
+    enabled: false,
+  }
+};
+
 const moneyPerPointType = (points) => {
   let result = points.reduce((acc, point) => {
     acc[point.type] = (acc[point.type] || 0) + point.price;
@@ -36,7 +69,7 @@ const moneyPerPointType = (points) => {
 const ridesPerTransferType = (points) => {
 
   let result = points
-    .filter((point) => getTypesByCategory(`transfers`).includes(point.type))
+    .filter((point) => POINT_TYPES.transfers.includes(point.type))
     .reduce((acc, point) => {
       acc[point.type] = (acc[point.type] || 0) + 1;
       return acc;
@@ -89,37 +122,7 @@ const renderMoneyChart = (moneyCtx, points) => {
         fontSize: FontSize.TITLE,
         position: `left`
       },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: PADDING,
-            fontSize: FontSize.TICK,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: BAR_THICKNESS,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          minBarLength: MIN_BAR_LENGTH
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      }
+      ...options
     }
   });
 };
@@ -158,37 +161,7 @@ const renderTransportChart = (transportCtx, points) => {
         fontSize: FontSize.TITLE,
         position: `left`
       },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: PADDING,
-            fontSize: FontSize.TICK,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: BAR_THICKNESS,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          minBarLength: MIN_BAR_LENGTH
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      }
+      ...options
     }
   });
 };
@@ -217,47 +190,17 @@ const renderTimeChart = (timeCtx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}H`
+          formatter: (val) => `${val} H`
         }
       },
       title: {
         display: true,
-        text: `TRANSPORT`,
+        text: `TIME SPENT`,
         fontColor: `#000000`,
         fontSize: FontSize.TITLE,
         position: `left`
       },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: PADDING,
-            fontSize: FontSize.TICK,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: BAR_THICKNESS,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          minBarLength: MIN_BAR_LENGTH
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      }
+      ...options
     }
   });
 };
