@@ -602,6 +602,7 @@ main {
   display: block;
   padding: 5px 10px 5px 62px;
   font-size: 17px;
+  text-transform: capitalize;
   line-height: 21px;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -668,6 +669,11 @@ main {
   margin-right: 15px;
   font-weight: 400;
   font-size: inherit; }
+
+.event__title::first-letter {
+text-transform: capitalize;
+}
+
 
 .event__schedule {
   -ms-flex-negative: 0;
@@ -750,6 +756,10 @@ main {
 .event__label {
   margin-right: 5px;
   cursor: pointer; }
+
+.event__label::first-letter {
+ text-transform: uppercase }
+
 
 .event__input {
   -ms-flex-positive: 1;

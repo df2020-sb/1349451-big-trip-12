@@ -4,14 +4,6 @@ export const POINT_TYPES = {
   activities: [`check-in`, `sightseeing`, `restaurant`]
 };
 
-// export const OFFERS = {
-//   luggage: {title: `Add luggage`, price: 30},
-//   comfort: {title: `Switch to comfort class`, price: 100},
-//   meal: {title: `Add meal`, price: 15},
-//   seats: {title: `Choose seats`, price: 5},
-//   train: {title: `Travel by train`, price: 40},
-// };
-
 export const filters = [`everything`, `future`, `past`];
 
 export const SortType = {

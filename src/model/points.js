@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import Observer from "../utils/observer";
+import Observer from '../utils/observer';
 
 export default class Points extends Observer {
   constructor() {
@@ -60,8 +60,8 @@ export default class Points extends Observer {
     const adaptedPoint = Object.assign({}, point,
       {
         price: point.base_price,
-        startDate: point.date_from !== null ? new Date(point.date_from) : point.date_from,
-        endDate: point.date_to !== null ? new Date(point.date_to) : point.date_to,
+        startDate: point.date_from ? new Date(point.date_from) : point.date_from,
+        endDate: point.date_to ? new Date(point.date_to) : point.date_to,
         isFavorite: point.is_favorite,
       }
     );

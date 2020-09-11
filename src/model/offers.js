@@ -1,5 +1,5 @@
-import Observer from "../utils/observer";
-import {UpdateType} from "../const";
+import Observer from '../utils/observer';
+import {UpdateType} from '../const';
 
 export default class Offers extends Observer {
   constructor() {

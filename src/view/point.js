@@ -1,14 +1,14 @@
 
 import AbstractView from './abstract';
-import moment from "moment";
+import moment from 'moment';
 import {POINT_TYPES} from '../const';
-import {capitalizeFirstLetter} from '../utils/common';
+
 
 const createPointTemplate = (point) => {
 
   const {type, destination, price, startDate, endDate, offers} = point;
-  const capitalizedType = capitalizeFirstLetter(type);
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${capitalizedType} in ` : `${capitalizedType} to`;
+
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
 
   const formattedStartDate = moment(startDate).format(`YYYY-MM-DD`);
   const formattedStartTime = moment(startDate).format(`HH:mm`);

@@ -1,9 +1,8 @@
-/* eslint-disable indent */
 import SmartView from './smart';
 import {ICONS, POINT_TYPES} from '../const';
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from "moment";
+import moment from 'moment';
 
 const BarHeight = {
   MONEY: 330,

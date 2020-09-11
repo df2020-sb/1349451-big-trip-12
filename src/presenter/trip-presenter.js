@@ -6,9 +6,9 @@ import DaysList from '../view/days-list';
 import PointPresenter from './point-presenter';
 import PointNew from './point-new-presenter';
 import NoPoints from '../view/no-points';
-import {SortType, UpdateType, UserAction} from "../const";
-import {filter} from "../utils/filter";
-import LoadingView from "../view/loading.js";
+import {SortType, UpdateType, UserAction} from '../const';
+import {filter} from '../utils/filter';
+import LoadingView from '../view/loading';
 
 
 const createDay = () => {

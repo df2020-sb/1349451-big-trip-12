@@ -9,8 +9,8 @@ import FilterModel from './model/filter';
 import DestinationsModel from './model/destinations';
 import OffersModel from './model/offers';
 import StatsView from './view/statistics';
-import {MenuItem, UpdateType} from "./const.js";
-import Api from "./api.js";
+import {MenuItem, UpdateType} from './const';
+import Api from './api';
 
 
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;

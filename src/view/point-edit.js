@@ -1,9 +1,8 @@
 /* eslint-disable indent */
 import SmartView from './smart';
-import flatpickr from "flatpickr";
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-import moment from "moment";
-import {capitalizeFirstLetter} from '../utils/common';
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import moment from 'moment';
 import {POINT_TYPES} from '../const';
 
 let currentOffer = {};
@@ -22,7 +21,7 @@ const createTypeList = (pointTypes, currentType) => {
     return (
       `<div class="event__type-item">
         <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointType} ${pointType === currentType ? `checked` : ``}>
-        <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${capitalizeFirstLetter(pointType)}</label>
+        <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${(pointType)}</label>
       </div>`);
   }).join(``);
 };
@@ -57,8 +56,7 @@ const createCitiesList = (cities) => {
 
 
 const createCityTemplate = (city, citiesArray, type) => {
-  const capitalizedType = capitalizeFirstLetter(type);
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${capitalizedType} in ` : `${capitalizedType} to`;
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
 
   return (
     `<div class="event__field-group  event__field-group--destination">
@@ -224,6 +222,7 @@ export default class PointEdit extends SmartView {
   }
 
   _getTemplate() {
+    this._updateOffers(this._data.type);
     return createPointEditTemplate(this._data, this._allCities, currentOffer, this._isNewPoint);
   }
 
@@ -260,7 +259,6 @@ export default class PointEdit extends SmartView {
   _typeChangeHandler(evt) {
     evt.preventDefault();
     const type = this.getElement().querySelector(`label[for= ${evt.target.id}]`).textContent.trim().toLowerCase();
-    this._updateOffers(type);
     this.updateData({type});
   }
 

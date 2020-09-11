@@ -1,6 +1,5 @@
-
 import AbstractView from './abstract';
-import moment from "moment";
+import moment from 'moment';
 
 const createDayTemplate = (date, index) => {
   return (

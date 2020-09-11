@@ -2,7 +2,7 @@
 import {POINT_TYPES} from '../const';
 import PointEdit from '../view/point-edit';
 import {render, RenderPosition, remove} from '../utils/render';
-import {UserAction, UpdateType} from "../const";
+import {UserAction, UpdateType} from '../const';
 import {renderOffer} from '../view/point-edit';
 import {renderDestination} from '../view/point-edit';
 

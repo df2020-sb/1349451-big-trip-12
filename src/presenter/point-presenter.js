@@ -49,7 +49,7 @@ export default class PointPresenter {
     const prevPointEditComponent = this._pointEditComponent;
 
     this._offersModel.setCurrentOffer(this._point.type);
-    // this._destinationsModel.setCurrentDestination(this._point.destination.name);
+
     const allCities = this._destinationsModel._getAllCities() || [];
 
     this._pointComponent = new Point(point);
@@ -120,6 +120,7 @@ export default class PointPresenter {
   }
 
   _handleSubmit(update) {
+
     const isTripUpdate =
       !isDatesEqual(this._point.startDate, update.startDate)
       || !isDatesEqual(this._point.endDate, update.endDate)
@@ -131,6 +132,7 @@ export default class PointPresenter {
 
     this._replaceFormToPoint();
   }
+
 
   destroy() {
     remove(this._pointComponent);
