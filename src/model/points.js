@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import Observer from '../utils/observer';
 
 export default class Points extends Observer {
@@ -58,12 +57,12 @@ export default class Points extends Observer {
 
   static adaptToClient(point) {
     const adaptedPoint = Object.assign({}, point,
-      {
-        price: point.base_price,
-        startDate: point.date_from ? new Date(point.date_from) : point.date_from,
-        endDate: point.date_to ? new Date(point.date_to) : point.date_to,
-        isFavorite: point.is_favorite,
-      }
+        {
+          price: point.base_price,
+          startDate: point.date_from ? new Date(point.date_from) : point.date_from,
+          endDate: point.date_to ? new Date(point.date_to) : point.date_to,
+          isFavorite: point.is_favorite,
+        }
     );
 
     delete adaptedPoint.date_from;
@@ -76,14 +75,14 @@ export default class Points extends Observer {
 
   static adaptToServer(point) {
     const adaptedPoint = Object.assign(
-      {},
-      point,
-      {
-        "base_price": point.price,
-        "date_from": point.startDate instanceof Date ? point.startDate.toISOString() : null,
-        "date_to": point.endDate instanceof Date ? point.endDate.toISOString() : null,
-        "is_favorite": point.isFavorite,
-      }
+        {},
+        point,
+        {
+          "base_price": point.price,
+          "date_from": point.startDate instanceof Date ? point.startDate.toISOString() : null,
+          "date_to": point.endDate instanceof Date ? point.endDate.toISOString() : null,
+          "is_favorite": point.isFavorite,
+        }
     );
 
     delete adaptedPoint.price;

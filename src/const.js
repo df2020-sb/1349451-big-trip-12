@@ -1,4 +1,3 @@
-
 export const POINT_TYPES = {
   transfers: [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`],
   activities: [`check-in`, `sightseeing`, `restaurant`]

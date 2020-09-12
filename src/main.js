@@ -53,9 +53,7 @@ const handleMenuClick = (menuItem) => {
 };
 
 const renderTripInfo = (points) => {
-  // if (!points[0]) {
-  //   return;
-  // }
+
   const prevTripInfoComponent = tripInfoComponent;
   tripInfoComponent = new TripInfo(points);
 

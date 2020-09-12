@@ -1,6 +1,5 @@
 import AbstractView from '../view/abstract';
 
-
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`

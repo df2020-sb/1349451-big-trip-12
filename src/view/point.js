@@ -1,4 +1,3 @@
-
 import AbstractView from './abstract';
 import moment from 'moment';
 import {POINT_TYPES} from '../const';
