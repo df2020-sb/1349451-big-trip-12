@@ -12,6 +12,11 @@ export default class Observer {
   }
 
   _notify(event, payload) {
-    this._observers.forEach((observer) => observer(event, payload));
+    if (event) {
+      this._observers.forEach((observer) => observer(event, payload));
+    } else {
+      this._observers[this._observers.length - 1]();
+    }
+
   }
 }

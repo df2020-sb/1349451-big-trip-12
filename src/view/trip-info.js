@@ -1,21 +1,22 @@
 import AbstractView from './abstract';
-import {OFFERS} from '../const.js';
 import moment from "moment";
 
 const createTripInfoTemplate = (points) => {
-  const tripStartDate = points[0].startDate;
-  const tripEndDate = points[points.length - 1].endDate;
-  const tripStartDateString = moment(tripStartDate).format(`MMM DD`);
-  const tripEndDateString = tripStartDate.getMonth() !== tripEndDate.getMonth()
-    ? moment(tripEndDate).format(`MMM DD`)
-    : `${moment(tripEndDate).format(`DD`)}`;
-
+  const tripStartDate = points.length ? points[0].startDate : null;
+  const tripEndDate = points.length ? points[points.length - 1].endDate : null;
+  let tripStartDateString = tripStartDate ? moment(tripStartDate).format(`MMM DD`) : ``;
+  let tripEndDateString = ``;
+  if (tripStartDate && tripEndDate) {
+    tripEndDateString = tripStartDate.getMonth() !== tripEndDate.getMonth()
+      ? moment(tripEndDate).format(`MMM DD`)
+      : `${moment(tripEndDate).format(`DD`)}`;
+  }
 
   const getOffersPrice = (point) => {
     let total = 0;
     if (point.offers.length) {
       total = point.offers.reduce((offersTotal, offer) =>
-        offersTotal + OFFERS[offer].price, 0);
+        offersTotal + offer.price, 0);
     }
     return total;
   };
@@ -23,12 +24,11 @@ const createTripInfoTemplate = (points) => {
   const totalPrice = points.reduce((pointsTotal, point) =>
     pointsTotal + Number(point.price) + getOffersPrice(point), 0);
 
-
-  const cities = points.map((point) => point.city);
+  const cities = points.map((point) => point.destination.name);
   const lastCity = cities.pop();
 
   const getMiddleCities = () => {
-    let middleCities = `&mdash;`;
+    let middleCities = points.length ? `&mdash;` : ``;
     const uniqueCities = Array.from(new Set(cities));
     uniqueCities.push(lastCity);
 
@@ -44,11 +44,10 @@ const createTripInfoTemplate = (points) => {
 
     return middleCities;
   };
-
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${cities[0]}  ${getMiddleCities()} ${lastCity}</h1>
+        <h1 class="trip-info__title">${cities[0] || ``}  ${getMiddleCities()} ${lastCity || ``}</h1>
         <p class="trip-info__dates">${tripStartDateString}&nbsp;&mdash;&nbsp;${tripEndDateString}</p>
       </div>
       <p class="trip-info__cost">

@@ -1,26 +1,27 @@
 /* eslint-disable indent */
-import {CITIES} from '../const';
-import {getRandomInteger} from '../utils/common';
-import {createDescription, getTypesByCategory} from '../mock/point';
 import SmartView from './smart';
-import flatpickr from "flatpickr";
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-import moment from "moment";
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import moment from 'moment';
+import {POINT_TYPES} from '../const';
 
-let availableOffers = {};
+let currentOffer = {};
+let currentDestination = {};
 
-export const renderOffers = (offers) => {
-  availableOffers = offers;
+export const renderOffer = (offer) => {
+  currentOffer = offer;
 };
 
-const createTypeList = (pointTypes) => {
+export const renderDestination = (destination) => {
+  currentDestination = destination;
+};
 
+const createTypeList = (pointTypes, currentType) => {
   return pointTypes.map((pointType) => {
-    const pointTypeLowerCase = pointType.toLowerCase();
     return (
       `<div class="event__type-item">
-        <input id="event-type-${pointTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointTypeLowerCase}>
-        <label class="event__type-label  event__type-label--${pointTypeLowerCase}" for="event-type-${pointTypeLowerCase}-1">${pointType}</label>
+        <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointType} ${pointType === currentType ? `checked` : ``}>
+        <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${(pointType)}</label>
       </div>`);
   }).join(``);
 };
@@ -30,18 +31,18 @@ const createTypeTemplate = (type) => {
     `<div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Transfer</legend>
-          ${createTypeList(getTypesByCategory(`transfers`))}
+          ${createTypeList(POINT_TYPES.transfers, type)}
         </fieldset>
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Activity</legend>
-          ${createTypeList(getTypesByCategory(`activities`))}
+          ${createTypeList(POINT_TYPES.activities, type)}
         </fieldset>
       </div>
   </div>`
@@ -50,21 +51,19 @@ const createTypeTemplate = (type) => {
 
 
 const createCitiesList = (cities) => {
-
-  return cities.map((city) =>
-    `<option value = "${city}" ></option > `).join(``);
+  return cities.length ? cities.map((city) => `<option value = "${city}"></option>`).join(``) : ``;
 };
 
 
 const createCityTemplate = (city, citiesArray, type) => {
-  const pointTypeString = getTypesByCategory(`activities`).includes(type) ? `${type} in ` : `${type} to`;
+  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
 
   return (
     `<div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
         ${pointTypeString}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1" pattern="${citiesArray.join(`|`)}">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city ? city : ``}" list="destination-list-1" pattern="${citiesArray.join(`|`)}">
     <datalist id="destination-list-1">
       ${createCitiesList(citiesArray)}
     </datalist>
@@ -105,54 +104,53 @@ const createPriceTemplate = (price) => {
 };
 
 
-const createOffersList = (pointOffers, typeOffers) => {
+const createOffersList = (pointOffers, typeOffer) => {
 
-  return Object.entries(typeOffers).map(([category, params]) =>
+  return typeOffer.offers.map((item) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${category}-1" type="checkbox" name="event-offer-${category}" ${pointOffers.includes(category) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${category}-1">
-            <span class="event__offer-title">${params.title}</span>
-            &plus;
-          &euro;&nbsp;<span class="event__offer-price">${params.price}</span>
-          </label>
-      </div>`).join(``);
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title}-1" type="checkbox" name="event-offer-${item.title}" ${pointOffers.find((offer) => offer.title === item.title) ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${item.title}-1">
+       <span class="event__offer-title">${item.title}</span>
+       &plus;
+       &euro;&nbsp;<span class="event__offer-price">${item.price}</span>
+      </label>
+     </div>`).join(``);
 };
 
 
-const createOffersTemplate = (pointOffers, typeOffers = {}) => {
-  return Object.keys(typeOffers).length ? `<section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-            ${createOffersList(pointOffers, typeOffers)}
-          </div>
-        </section>` : ``;
+const createOffersTemplate = (pointOffers, typeOffer = {}) => {
+  return Object.keys(typeOffer).length && typeOffer.offers.length ? `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">
+    ${createOffersList(pointOffers, typeOffer)}
+  </div>
+  </section>` : ``;
 };
 
 
 const createPhotosTemplate = (photosArray = []) => {
-  return photosArray.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
+  return photosArray.map((photo) => `<img class="event__photo" src = "${photo.src}" alt = "${photo.description}">`).join(``);
 };
 
 
-const createDestinationTemplate = (city, destination) => {
-  return (city === `` ? `` :
+const createDestinationTemplate = (destination) => {
+  return (!destination.name || destination.name === `` ? `` :
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${destination.description}.</p>
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${createPhotosTemplate(destination.photos)}
+        ${createPhotosTemplate(destination.pictures)}
         </div>
       </div>
     </section>`);
 };
 
 
-const createPointEditTemplate = (point, typeOffers, isNewPoint) => {
+const createPointEditTemplate = (point, cities, typeOffer = {}, isNewPoint) => {
 
   const {
     type,
-    city,
     price,
     startDate,
     endDate,
@@ -163,46 +161,47 @@ const createPointEditTemplate = (point, typeOffers, isNewPoint) => {
 
   return (
     `<div>
-            <form class="trip-events__item  event  event--edit" action="#" method="post">
-              <header class="event__header">
-                ${createTypeTemplate(type)}
-                ${createCityTemplate(city, CITIES, type)}
-                ${createDatesTemplate(startDate, endDate)}
-                ${createPriceTemplate(price)}
-                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                <button class="event__reset-btn" type="reset">${isNewPoint ? `Cancel` : `Delete`}</button>
-                <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox"
-                  name="event-favorite" ${isFavorite ? `checked` : ``} />
-                <label class="event__favorite-btn" for="event-favorite-1">
-                  <span class="visually-hidden">Add to favorite</span>
-                  <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-                    <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z" />
-                  </svg>
-                </label>
-                ${isNewPoint ? `` : `<button class="event__rollup-btn" type="button">
-                  <span class="visually-hidden">Open event</span>
-                </button>`}
-              </header>
+      <form class="trip-events__item  event  event--edit" action="#" method="post">
+        <header class="event__header">
+          ${createTypeTemplate(type)}
+          ${createCityTemplate(destination.name, cities, type)}
+          ${createDatesTemplate(startDate, endDate)}
+          ${createPriceTemplate(price)}
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">${isNewPoint ? `Cancel` : `Delete`}</button>
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox"
+            name="event-favorite" ${isFavorite ? `checked` : ``} />
+          <label class="event__favorite-btn" for="event-favorite-1">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z" />
+            </svg>
+          </label>
+          ${isNewPoint ? `` : `<button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+          </button>`}
+        </header>
 
-              ${ !Object.keys(typeOffers).length && city === `` ? `` : `<section class="event__details">
-                ${createOffersTemplate(offers, typeOffers)}
-                ${createDestinationTemplate(city, destination)}
-              </section>`}
-            </form>
-          </div>`
+        ${!Object.keys(typeOffer).length && !Object.keys(destination).length ? `` : `<section class="event__details">
+          ${createOffersTemplate(offers, typeOffer)}
+          ${createDestinationTemplate(destination)}
+          </section>`}
+      </form>
+  </div>`
   );
 };
 
 
 export default class PointEdit extends SmartView {
 
-  constructor(point, updateOffers, isNewPoint = false) {
+  constructor(point, allCities, updateOffers, updateDestination, isNewPoint = false) {
     super();
     this._data = point;
+    this._allCities = allCities;
     this._startDatepicker = null;
     this._endDatepicker = null;
-    this._offersComponent = null;
     this._updateOffers = updateOffers;
+    this._updateDestination = updateDestination;
     this._isNewPoint = isNewPoint;
 
     this._submitHandler = this._submitHandler.bind(this);
@@ -221,24 +220,21 @@ export default class PointEdit extends SmartView {
     this._setDestinationChangeHandler();
     this._setPriceChangeHandler();
     this._setOffersChangeHandler();
-
   }
-
 
   _getTemplate() {
     this._updateOffers(this._data.type);
-    return createPointEditTemplate(this._data, availableOffers, this._isNewPoint);
+    return createPointEditTemplate(this._data, this._allCities, currentOffer, this._isNewPoint);
   }
 
   _submitHandler(evt) {
     evt.preventDefault();
 
-    if (!this._data.startDate || !this._data.endDate || this._data.city === ``) {
+    if (!this._data.startDate || !this._data.endDate || this._data.destination.name === ``) {
       return;
     }
 
     this._isNewPoint = false;
-    // this._offersChangeHandler();
     this.destroyPicker(this._startDatepicker);
     this.destroyPicker(this._endDatepicker);
     this._callback.submit(this._data);
@@ -251,9 +247,8 @@ export default class PointEdit extends SmartView {
   }
 
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this.updateData({isFavorite: !this._data.isFavorite});
+  _favoriteClickHandler() {
+    this.updateData({isFavorite: !this._data.isFavorite}, true);
   }
 
 
@@ -264,9 +259,8 @@ export default class PointEdit extends SmartView {
 
   _typeChangeHandler(evt) {
     evt.preventDefault();
-    const type = this.getElement().querySelector(`label[for=${evt.target.id}]`).textContent.trim();
+    const type = this.getElement().querySelector(`label[for= ${evt.target.id}]`).textContent.trim().toLowerCase();
     this.updateData({type});
-
   }
 
 
@@ -276,15 +270,9 @@ export default class PointEdit extends SmartView {
 
 
   _destinationChangeHandler(evt) {
-    if (evt.target.value !== this._data.city) {
-      this.updateData({
-        city: evt.target.value,
-        destination: {
-          description: createDescription(),
-          photos: new Array(getRandomInteger(1, 5)).fill().map(() =>
-            `http://picsum.photos/248/152?r=${Math.random()}`)
-        }
-      });
+    if (evt.target.value !== this._data.destination.name && this._allCities.includes(evt.target.value)) {
+      this._updateDestination(evt.target.value);
+      this.updateData({destination: currentDestination});
     }
   }
 
@@ -292,22 +280,23 @@ export default class PointEdit extends SmartView {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
   }
 
-
   _offersChangeHandler(evt) {
     if (evt.target.tagName === `INPUT`) {
       this._data.offers = [];
       const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
       selectedOffers.forEach((offer) => {
         let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
-        this._data.offers.push(Object.keys(availableOffers).find((key) => availableOffers[key].title === title));
+        this._updateOffers(this._data.type);
+        let newOffer = currentOffer.offers.find((item) => item.title === title);
+        this._data.offers.push(newOffer);
       });
 
-      this.updateData({offers: this._data.offers});
+      this.updateData({offers: this._data.offers}, true);
     }
   }
 
   _setOffersChangeHandler() {
-    if (Object.keys(availableOffers).length) {
+    if (currentOffer && currentOffer.offers.length) {
       this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersChangeHandler);
     }
   }
@@ -359,7 +348,7 @@ export default class PointEdit extends SmartView {
       .querySelector(`#event-start-time-1`),
       {
         enableTime: true,
-        dateFormat: `d/m/Y H:i`,
+        dateFormat: `d / m / Y H: i`,
         defaultDate: this._data.startDate,
         onChange: this._startDateChangeHandler
       }
@@ -369,14 +358,13 @@ export default class PointEdit extends SmartView {
       .querySelector(`#event-end-time-1`),
       {
         enableTime: true,
-        dateFormat: `d/m/Y H:i`,
+        dateFormat: `d / m / Y H: i`,
         defaultDate: this._data.endDate,
         minDate: this._data.startDate,
         onChange: this._endDateChangeHandler
       }
     );
   }
-
 
   destroyPicker(datepicker) {
     if (datepicker) {
@@ -409,7 +397,7 @@ export default class PointEdit extends SmartView {
   }
 
   reset(point) {
-    this.updateData(point);
+    this.updateData(Object.assign(point, {isFavorite: this._data.isFavorite}));
   }
 
   removeElement() {

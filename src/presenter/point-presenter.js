@@ -3,9 +3,9 @@ import Point from '../view/point';
 import PointEdit from '../view/point-edit';
 import {render, RenderPosition, replace, remove} from '../utils/render';
 import {isDatesEqual} from '../utils/common';
-import {UserAction, UpdateType} from "../const";
-import OffersModel from '../model/offers';
-import {renderOffers} from '../view/point-edit';
+import {UserAction, UpdateType} from '../const';
+import {renderOffer} from '../view/point-edit';
+import {renderDestination} from '../view/point-edit';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -13,17 +13,19 @@ const Mode = {
 };
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, destinationsModel, offersModel, changeData, changeMode) {
     this._changeData = changeData;
     this._changeMode = changeMode;
+
     this._container = container;
     this._pointComponent = null;
     this._pointEditComponent = null;
-    this._initialOffers = {};
-    this._availableOffers = {};
+    this._currentOffer = {};
+    this._currentDestination = {};
     this._mode = Mode.DEFAULT;
 
-    this._offersModel = new OffersModel();
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleEditControlClick = this._handleEditControlClick.bind(this);
@@ -31,22 +33,27 @@ export default class PointPresenter {
     this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
 
-    this._handleAction = this._handleAction.bind(this);
-    this._handleModelUpdate = this._handleModelUpdate.bind(this);
+    this._handleOffersChange = this._handleOffersChange.bind(this);
+    this._handleOffersModelUpdate = this._handleOffersModelUpdate.bind(this);
+    this._handleDestinationChange = this._handleDestinationChange.bind(this);
+    this._handleDestinationsModelUpdate = this._handleDestinationsModelUpdate.bind(this);
 
-    this._offersModel.addObserver(this._handleModelUpdate);
+    this._offersModel.addObserver(this._handleOffersModelUpdate);
+    this._destinationsModel.addObserver(this._handleDestinationsModelUpdate);
+
   }
 
   init(point) {
     this._point = point;
-
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
-    this._offersModel.setOffers(this._point.type);
+    this._offersModel.setCurrentOffer(this._point.type);
+
+    const allCities = this._destinationsModel._getAllCities() || [];
 
     this._pointComponent = new Point(point);
-    this._pointEditComponent = new PointEdit(point, this._handleAction, false);
+    this._pointEditComponent = new PointEdit(point, allCities, this._handleOffersChange, this._handleDestinationChange, false);
 
     this._pointComponent.setEditControlClickHandler(this._handleEditControlClick);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
@@ -113,6 +120,7 @@ export default class PointPresenter {
   }
 
   _handleSubmit(update) {
+
     const isTripUpdate =
       !isDatesEqual(this._point.startDate, update.startDate)
       || !isDatesEqual(this._point.endDate, update.endDate)
@@ -125,10 +133,12 @@ export default class PointPresenter {
     this._replaceFormToPoint();
   }
 
+
   destroy() {
     remove(this._pointComponent);
     remove(this._pointEditComponent);
-    this.OffersModel.removeObserver(this._handleOffersModelUpdate);
+    this._offersModel.removeObserver(this._handleOffersModelUpdate);
+    this._destinationsModel.removeObserver(this._handleDestinationsModelUpdate);
   }
 
   resetView() {
@@ -137,12 +147,21 @@ export default class PointPresenter {
     }
   }
 
-  _handleAction(type) {
-    this._offersModel.setOffers(type);
+  _handleOffersChange(type) {
+    this._offersModel.setCurrentOffer(type);
   }
 
-  _handleModelUpdate() {
-    this._availableOffers = this._offersModel.getOffers();
-    renderOffers(this._availableOffers);
+  _handleOffersModelUpdate() {
+    this._currentOffer = this._offersModel.getOffer();
+    renderOffer(this._currentOffer);
+  }
+
+  _handleDestinationChange(city) {
+    this._destinationsModel.setCurrentDestination(city);
+  }
+
+  _handleDestinationsModelUpdate() {
+    this._currentDestination = this._destinationsModel.getCurrentDestination();
+    renderDestination(this._currentDestination);
   }
 }

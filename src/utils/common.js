@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 
 export const getRandomInteger = (a, b) => {
@@ -29,5 +29,3 @@ export const getRandomUniqueArrayElements = (array) => {
 export const isDatesEqual = (dateA, dateB) => {
   return moment(dateA).isSame(dateB);
 };
-
-

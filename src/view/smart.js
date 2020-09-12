@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from './abstract';
 
 export default class Smart extends AbstractView {
   constructor() {
@@ -7,12 +7,15 @@ export default class Smart extends AbstractView {
   }
 
 
-  updateData(update) {
+  updateData(update, isNotElementUpdate) {
     if (!update) {
       return;
     }
 
     this._data = Object.assign({}, this._data, update);
+    if (isNotElementUpdate) {
+      return;
+    }
     this.updateElement();
   }
 
