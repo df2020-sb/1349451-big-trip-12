@@ -105,13 +105,14 @@ const createPriceTemplate = (price) => {
 
 
 const createOffersList = (pointOffers, typeOffer) => {
-  return typeOffer.offers.map(({title, price}) =>
+
+  return typeOffer.offers.map((item) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}" ${pointOffers.find((offer) => offer.title === title) ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${title}-1">
-       <span class="event__offer-title">${title}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title}-1" type="checkbox" name="event-offer-${item.title}" ${pointOffers.find((offer) => offer.title === item.title) ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${item.title}-1">
+       <span class="event__offer-title">${item.title}</span>
        &plus;
-       &euro;&nbsp;<span class="event__offer-price">${price}</span>
+       &euro;&nbsp;<span class="event__offer-price">${item.price}</span>
       </label>
      </div>`).join(``);
 };
@@ -285,6 +286,7 @@ export default class PointEdit extends SmartView {
       const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
       selectedOffers.forEach((offer) => {
         let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
+        this._updateOffers(this._data.type);
         let newOffer = currentOffer.offers.find((item) => item.title === title);
         this._data.offers.push(newOffer);
       });

@@ -1,5 +1,4 @@
 import Observer from '../utils/observer';
-import {UpdateType} from '../const';
 
 export default class Offers extends Observer {
   constructor() {
@@ -10,7 +9,6 @@ export default class Offers extends Observer {
 
   setOffers(offers) {
     this._offers = offers;
-    this._notify(UpdateType.TRIP);
   }
 
   setCurrentOffer(type) {

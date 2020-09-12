@@ -75,8 +75,6 @@ export default class Trip {
   init() {
     this._pointsModel.addObserver(this._handleUpdate);
     this._filterModel.addObserver(this._handleUpdate);
-    this._destinationsModel.addObserver(this._handleUpdate);
-    this._offersModel.addObserver(this._handleUpdate);
     this._renderDaysList();
     this._renderDays();
   }

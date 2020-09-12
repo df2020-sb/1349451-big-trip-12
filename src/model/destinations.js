@@ -1,6 +1,4 @@
 import Observer from '../utils/observer';
-import {UpdateType} from '../const';
-
 
 export default class Destinations extends Observer {
   constructor() {
@@ -11,7 +9,6 @@ export default class Destinations extends Observer {
 
   setDestinations(destinations) {
     this._destinations = destinations;
-    this._notify(UpdateType.TRIP);
   }
 
   _getAllCities() {

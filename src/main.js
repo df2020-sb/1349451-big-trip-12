@@ -89,11 +89,12 @@ Promise.all([
   api.getDestinations(),
   api.getOffers()
 ]).then(([points, destinations, offers]) => {
+  destinationsModel.setDestinations(destinations);
+  offersModel.setOffers(offers);
   pointsModel.setPoints(UpdateType.INIT, points);
   render(controls, menu, RenderPosition.AFTERBEGIN);
   menu.setMenuClickHandler(handleMenuClick);
-  destinationsModel.setDestinations(destinations);
-  offersModel.setOffers(offers);
+
   addButton.disabled = false;
 }).catch(() => {
   pointsModel.setPoints(UpdateType.INIT, []);
