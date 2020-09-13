@@ -164,8 +164,6 @@ export default class PointPresenter {
     this._changeData(UserAction.UPDATE_POINT,
         isTripUpdate ? UpdateType.TRIP : UpdateType.POINT,
         update);
-
-    // this._replaceFormToPoint();
   }
 
 
