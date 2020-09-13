@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 export const getRandomInteger = (a, b) => {
   const min = Math.ceil(Math.min(a, b));
   const max = Math.floor(Math.max(a, b));

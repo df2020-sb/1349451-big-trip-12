@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import moment from "moment";
+import moment from 'moment';
 
 const createTripInfoTemplate = (points) => {
   const tripStartDate = points.length ? points[0].startDate : null;

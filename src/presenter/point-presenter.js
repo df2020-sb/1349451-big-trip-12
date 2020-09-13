@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import Point from '../view/point';
 import PointEdit from '../view/point-edit';
 import {render, RenderPosition, replace, remove} from '../utils/render';
@@ -11,6 +10,13 @@ const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`
 };
+
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ERROR: `ERROR`
+};
+
 
 export default class PointPresenter {
   constructor(container, destinationsModel, offersModel, changeData, changeMode) {
@@ -72,13 +78,42 @@ export default class PointPresenter {
     if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, prevPointComponent);
     } else {
-      replace(this._pointEditComponent, prevPointEditComponent);
+      replace(this._pointComponent, prevPointEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
   }
 
+  setViewState(state) {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ERROR:
+        this._pointComponent.shake(resetFormState);
+        this._pointEditComponent.shake(resetFormState);
+        break;
+    }
+  }
 
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
@@ -113,9 +148,9 @@ export default class PointPresenter {
 
   _handleDeleteClick(point) {
     this._changeData(
-      UserAction.DELETE_POINT,
-      UpdateType.TRIP,
-      point
+        UserAction.DELETE_POINT,
+        UpdateType.TRIP,
+        point
     );
   }
 
@@ -127,10 +162,8 @@ export default class PointPresenter {
       || this._point.price !== update.price;
 
     this._changeData(UserAction.UPDATE_POINT,
-      isTripUpdate ? UpdateType.TRIP : UpdateType.POINT,
-      update);
-
-    this._replaceFormToPoint();
+        isTripUpdate ? UpdateType.TRIP : UpdateType.POINT,
+        update);
   }
 
 

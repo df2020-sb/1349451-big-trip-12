@@ -1,6 +1,6 @@
 import SmartView from './smart';
 import {ICONS, POINT_TYPES} from '../const';
-import Chart from "chart.js";
+import Chart from 'chart';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 

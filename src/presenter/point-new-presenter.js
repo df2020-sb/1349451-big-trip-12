@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import {POINT_TYPES} from '../const';
 import PointEdit from '../view/point-edit';
 import {render, RenderPosition, remove} from '../utils/render';
@@ -9,16 +8,14 @@ import {renderDestination} from '../view/point-edit';
 const addButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const EMPTY_POINT = {
-  type: Object.values(POINT_TYPES)[0][0],
-  city: ``,
   price: ``,
   startDate: null,
   endDate: null,
-  offers: [],
   destination: {},
-  isFavorite: false
+  isFavorite: false,
+  offers: [],
+  type: Object.values(POINT_TYPES)[0][0]
 };
-
 
 export default class PointNew {
   constructor(container, destinationsModel, offersModel, changeData) {
@@ -74,14 +71,29 @@ export default class PointNew {
     addButton.disabled = false;
   }
 
+  setToSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setToError() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this._pointEditComponent.shake(resetFormState);
+  }
+
   _handleSubmit(point) {
     this._changeData(
-      UserAction.ADD_POINT,
-      UpdateType.TRIP,
-      point);
-    this.destroy();
-
-    addButton.disabled = false;
+        UserAction.ADD_POINT,
+        UpdateType.TRIP,
+        point);
   }
 
   _handleDeleteClick() {
