@@ -87,9 +87,9 @@ export default class Provider {
   deletePoint(point) {
     if (this._isOnline()) {
       return this._api.deletePoint(point)
-        .then(() => this._store.removeItem(point.id));
+        .then(() => this._store.removePoint(point.id));
     }
-    this._store.removeItem(point.id);
+    this._store.removePoint(point.id);
     return Promise.resolve();
   }
 

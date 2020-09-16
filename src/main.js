@@ -11,8 +11,8 @@ import OffersModel from './model/offers';
 import StatsView from './view/statistics';
 import {MenuItem, UpdateType} from './const';
 import Api from './api/index';
-import Store from "./api/store.js";
-import Provider from "./api/provider.js";
+import Store from './api/store';
+import Provider from './api/provider';
 
 
 const AUTHORIZATION = `Basic kTy9gIdsz23nblwrntb`;
