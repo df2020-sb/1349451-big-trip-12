@@ -74,7 +74,7 @@ const renderTripInfo = (points) => {
 };
 
 const tripPresenter = new TripPresenter(tripContainer, pointsModel, filterModel, destinationsModel, offersModel, renderTripInfo, apiWithProvider);
-const filterPresenter = new FilterPresenter(controls, filterModel);
+const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 
 render(main, tripContainer, RenderPosition.BEFOREEND);
 
