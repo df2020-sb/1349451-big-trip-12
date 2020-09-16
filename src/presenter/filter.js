@@ -1,22 +1,26 @@
 import FilterView from '../view/filter';
 import {render, RenderPosition, replace, remove} from '../utils/render';
-import {filters, UpdateType} from '../const';
+import {filter} from '../utils/filter';
+import {FilterType, UpdateType} from '../const';
 
 export default class FilterPresenter {
-  constructor(filterContainer, filterModel) {
+  constructor(filterContainer, filterModel, pointsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
+    this._pointsModel = pointsModel;
     this._currentFilter = null;
     this._filterComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
+    this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     this._currentFilter = this._filterModel.getFilter();
+    const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
@@ -42,5 +46,24 @@ export default class FilterPresenter {
 
   _handleModelEvent() {
     this.init();
+  }
+
+  _getFilters() {
+    const points = this._pointsModel.getPoints();
+
+    return [
+      {
+        type: FilterType.EVERYTHING,
+        isUsed: filter[FilterType.EVERYTHING](points).length
+      },
+      {
+        type: FilterType.FUTURE,
+        isUsed: filter[FilterType.FUTURE](points).length
+      },
+      {
+        type: FilterType.PAST,
+        isUsed: filter[FilterType.PAST](points).length
+      },
+    ];
   }
 }

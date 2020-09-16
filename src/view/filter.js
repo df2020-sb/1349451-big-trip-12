@@ -1,10 +1,11 @@
 import AbstractView from './abstract';
 
 const createFilter = (filter, currentFilterType) => {
+  const {type, isUsed} = filter;
   return (
     `<div class="trip-filters__filter">
-        <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter}" ${filter === currentFilterType ? `checked` : ``}>
-        <label class="trip-filters__filter-label" for="filter-${filter}">${filter}</label>
+        <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${type === currentFilterType ? `checked` : ``} ${isUsed ? `` : `disabled`}>
+        <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
       </div>`
   );
 };

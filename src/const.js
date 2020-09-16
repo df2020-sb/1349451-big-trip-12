@@ -3,7 +3,11 @@ export const POINT_TYPES = {
   activities: [`check-in`, `sightseeing`, `restaurant`]
 };
 
-export const filters = [`everything`, `future`, `past`];
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
 
 export const SortType = {
   DEFAULT: `default`,
