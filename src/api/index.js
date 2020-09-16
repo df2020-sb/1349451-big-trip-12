@@ -1,4 +1,4 @@
-import PointsModel from './model/points';
+import PointsModel from '../model/points';
 
 const Method = {
   GET: `GET`,
@@ -7,10 +7,12 @@ const Method = {
   DELETE: `DELETE`
 };
 
+
 const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
 };
+
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -65,7 +67,6 @@ export default class Api {
     });
   }
 
-
   _load({
     url,
     method = Method.GET,
@@ -79,6 +80,17 @@ export default class Api {
       .catch(Api.catchError);
   }
 
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
+
   static checkStatus(response) {
     if (
       response.status < SuccessHTTPStatusRange.MIN &&
@@ -89,9 +101,11 @@ export default class Api {
     return response;
   }
 
+
   static toJSON(response) {
     return response.json();
   }
+
 
   static catchError(err) {
     throw err;
