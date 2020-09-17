@@ -59,8 +59,8 @@ const handleMenuClick = (menuItem) => {
   }
 };
 
-const renderTripInfo = (points) => {
 
+const renderTripInfo = (points) => {
   const prevTripInfoComponent = tripInfoComponent;
   tripInfoComponent = new TripInfo(points);
 
@@ -72,6 +72,7 @@ const renderTripInfo = (points) => {
   replace(tripInfoComponent, prevTripInfoComponent);
   remove(prevTripInfoComponent);
 };
+
 
 const tripPresenter = new TripPresenter(tripContainer, pointsModel, filterModel, destinationsModel, offersModel, renderTripInfo, apiWithProvider);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);

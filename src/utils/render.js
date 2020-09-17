@@ -1,9 +1,11 @@
 import AbstractView from '../view/abstract';
 
+
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
 };
+
 
 export const render = (container, element, position) => {
 
@@ -25,12 +27,14 @@ export const render = (container, element, position) => {
   }
 };
 
+
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
   return newElement.firstChild;
 };
+
 
 export const replace = (newElement, oldElement) => {
   if (oldElement instanceof AbstractView) {
@@ -49,6 +53,7 @@ export const replace = (newElement, oldElement) => {
 
   parent.replaceChild(newElement, oldElement);
 };
+
 
 export const remove = (element) => {
   if (!element) {

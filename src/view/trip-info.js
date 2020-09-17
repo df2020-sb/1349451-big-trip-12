@@ -27,6 +27,7 @@ const createTripInfoTemplate = (points) => {
   const cities = points.map((point) => point.destination.name);
   const lastCity = cities.pop();
 
+
   const getMiddleCities = () => {
     let middleCities = points.length ? `&mdash;` : ``;
     const uniqueCities = Array.from(new Set(cities));
@@ -44,6 +45,7 @@ const createTripInfoTemplate = (points) => {
 
     return middleCities;
   };
+
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -56,6 +58,7 @@ const createTripInfoTemplate = (points) => {
     </section>`
   );
 };
+
 
 export default class TripInfo extends AbstractView {
   constructor(points) {

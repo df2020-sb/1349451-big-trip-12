@@ -75,6 +75,7 @@ export default class Trip {
   init() {
     this._pointsModel.addObserver(this._handleUpdate);
     this._filterModel.addObserver(this._handleUpdate);
+    this._currentSortType = SortType.DEFAULT;
     this._renderDaysList();
     this._renderDays();
   }
@@ -114,7 +115,6 @@ export default class Trip {
     if (this._sortComponent) {
       this._sortComponent = null;
     }
-
     this._sortComponent = new Sort(this._currentSortType);
     render(this._container, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeSelectHandler(this._handleSortTypeChange);

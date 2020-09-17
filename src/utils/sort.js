@@ -28,6 +28,7 @@ export const sortByTime = (pointA, pointB) => {
   return durationB - durationA;
 };
 
+
 export const sortByPrice = (pointA, pointB) => {
   let compareResult = compareNullAttributes(pointA.price, pointB.price);
 

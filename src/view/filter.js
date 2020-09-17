@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 
+
 const createFilter = (filter, currentFilterType) => {
   const {type, isUsed} = filter;
   return (
@@ -9,6 +10,7 @@ const createFilter = (filter, currentFilterType) => {
       </div>`
   );
 };
+
 
 const createFiltersTemplate = (filters, currentFilterType) => {
   const filtersTemplate = filters
@@ -23,6 +25,7 @@ const createFiltersTemplate = (filters, currentFilterType) => {
     </div>`
   );
 };
+
 
 export default class Filter extends AbstractView {
   constructor(filters, currentFilterType) {

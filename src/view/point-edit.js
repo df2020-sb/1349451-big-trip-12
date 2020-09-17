@@ -1,19 +1,23 @@
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import moment from 'moment';
 import {POINT_TYPES} from '../const';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
 
 let currentOffer = {};
 let currentDestination = {};
+
 
 export const renderOffer = (offer) => {
   currentOffer = offer;
 };
 
+
 export const renderDestination = (destination) => {
   currentDestination = destination;
 };
+
 
 const createTypeList = (pointTypes, currentType) => {
   return pointTypes.map((pointType) => {
@@ -56,7 +60,6 @@ const createCitiesList = (cities) => {
 
 const createCityTemplate = (city, citiesArray, type, isDisabled) => {
   const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
-
   return (
     `<div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
@@ -72,7 +75,6 @@ const createCityTemplate = (city, citiesArray, type, isDisabled) => {
 
 
 const createDatesTemplate = (startDate, endDate, isDisabled) => {
-
   return (
     `<div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time-1">
@@ -90,7 +92,6 @@ const createDatesTemplate = (startDate, endDate, isDisabled) => {
 
 
 const createPriceTemplate = (price, isDisabled) => {
-
   return (
     `<div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-1">
@@ -104,7 +105,6 @@ const createPriceTemplate = (price, isDisabled) => {
 
 
 const createOffersList = (pointOffers, typeOffer, isDisabled) => {
-
   return typeOffer.offers.map((item) =>
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title}-1" type="checkbox" name="event-offer-${item.title}" ${pointOffers.find((offer) => offer.title === item.title) ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
@@ -161,12 +161,15 @@ const createPointEditTemplate = (point, cities, typeOffer = {}, isNewPoint) => {
     isDeleting
   } = point;
 
+
   const setDeleteButtonTitle = () =>{
     if (isNewPoint) {
       return `Cancel`;
     }
+
     return isDeleting ? `Deleting...` : `Delete`;
   };
+
 
   return (
     `<div>
@@ -386,9 +389,11 @@ export default class PointEdit extends SmartView {
     this.updateData({price: Number(evt.target.value)});
   }
 
+
   _setPriceChangeHandler() {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
   }
+
 
   restoreHandlers() {
 
@@ -414,6 +419,7 @@ export default class PointEdit extends SmartView {
     this.destroyPicker(this._startDatepicker);
     this.destroyPicker(this._endDatepicker);
   }
+
 
   static parsePointToData(point) {
     return Object.assign({}, point,

@@ -1,6 +1,7 @@
 import AbstractView from './abstract';
 import moment from 'moment';
 
+
 const createDayTemplate = (date, index) => {
   return (
     `<li class="trip-days__item  day">
