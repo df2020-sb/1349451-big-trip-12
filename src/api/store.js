@@ -4,6 +4,7 @@ export default class Store {
     this._storeKey = key;
   }
 
+
   getData() {
     try {
       return JSON.parse(this._storage.getItem(this._storeKey)) || {};
@@ -12,12 +13,14 @@ export default class Store {
     }
   }
 
+
   setPoints(points) {
     const store = this.getData();
     this._storage.setItem(this._storeKey, JSON.stringify(Object.assign({}, store, {
       points
     })));
   }
+
 
   setDestinations(destinations) {
     const store = this.getData();
@@ -26,12 +29,14 @@ export default class Store {
     })));
   }
 
+
   setOffers(offers) {
     const store = this.getData();
     this._storage.setItem(this._storeKey, JSON.stringify(Object.assign({}, store, {
       offers
     })));
   }
+
 
   setPoint(key, value) {
     const store = this.getData();
@@ -42,6 +47,7 @@ export default class Store {
         }
     )));
   }
+
 
   removePoint(key) {
     const store = this.getData();

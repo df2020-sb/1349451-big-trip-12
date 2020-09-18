@@ -11,6 +11,7 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+
 export const State = {
   SAVING: `SAVING`,
   DELETING: `DELETING`,
@@ -86,6 +87,7 @@ export default class PointPresenter {
     remove(prevPointEditComponent);
   }
 
+
   setViewState(state) {
     const resetFormState = () => {
       this._pointEditComponent.updateData({
@@ -115,6 +117,22 @@ export default class PointPresenter {
     }
   }
 
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointEditComponent);
+    this._offersModel.removeObserver(this._handleOffersModelUpdate);
+    this._destinationsModel.removeObserver(this._handleDestinationsModelUpdate);
+  }
+
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToPoint();
+    }
+  }
+
+
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
@@ -123,11 +141,13 @@ export default class PointPresenter {
     this._pointEditComponent.setDatepickers();
   }
 
+
   _replaceFormToPoint() {
     replace(this._pointComponent, this._pointEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
+
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
@@ -137,14 +157,17 @@ export default class PointPresenter {
     }
   }
 
+
   _handleEditControlClick() {
     this._replacePointToForm();
   }
+
 
   _handleCloseEditClick() {
     this._pointEditComponent.reset(this._point);
     this._replaceFormToPoint();
   }
+
 
   _handleDeleteClick(point) {
     this._changeData(
@@ -154,8 +177,8 @@ export default class PointPresenter {
     );
   }
 
-  _handleSubmit(update) {
 
+  _handleSubmit(update) {
     const isTripUpdate =
       !isDatesEqual(this._point.startDate, update.startDate)
       || !isDatesEqual(this._point.endDate, update.endDate)
@@ -167,31 +190,21 @@ export default class PointPresenter {
   }
 
 
-  destroy() {
-    remove(this._pointComponent);
-    remove(this._pointEditComponent);
-    this._offersModel.removeObserver(this._handleOffersModelUpdate);
-    this._destinationsModel.removeObserver(this._handleDestinationsModelUpdate);
-  }
-
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._replaceFormToPoint();
-    }
-  }
-
   _handleOffersChange(type) {
     this._offersModel.setCurrentOffer(type);
   }
+
 
   _handleOffersModelUpdate() {
     this._currentOffer = this._offersModel.getOffer();
     renderOffer(this._currentOffer);
   }
 
+
   _handleDestinationChange(city) {
     this._destinationsModel.setCurrentDestination(city);
   }
+
 
   _handleDestinationsModelUpdate() {
     this._currentDestination = this._destinationsModel.getCurrentDestination();

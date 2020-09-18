@@ -1,6 +1,8 @@
 import {createElement} from '../utils/render';
 
+
 const SHAKE_ANIMATION_TIMEOUT = 600;
+
 
 export default class AbstractView {
   constructor() {
@@ -11,9 +13,6 @@ export default class AbstractView {
     this._callback = {};
   }
 
-  _getTemplate() {
-    throw new Error(`Abstract method not implemented: getTemplate`);
-  }
 
   getElement() {
     if (!this._element) {
@@ -22,9 +21,11 @@ export default class AbstractView {
     return this._element;
   }
 
+
   removeElement() {
     this._element = null;
   }
+
 
   shake(callback) {
     this.getElement().classList.add(`shake`);
@@ -32,5 +33,10 @@ export default class AbstractView {
       this.getElement().classList.remove(`shake`);
       callback();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+
+  _getTemplate() {
+    throw new Error(`Abstract method not implemented: getTemplate`);
   }
 }

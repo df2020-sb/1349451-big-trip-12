@@ -3,11 +3,13 @@ export const POINT_TYPES = {
   activities: [`check-in`, `sightseeing`, `restaurant`]
 };
 
+
 export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`
 };
+
 
 export const SortType = {
   DEFAULT: `default`,
@@ -15,11 +17,13 @@ export const SortType = {
   PRICE: `price`
 };
 
+
 export const UserAction = {
   UPDATE_POINT: `UPDATE_POINT`,
   ADD_POINT: `ADD_POINT`,
   DELETE_POINT: `DELETE_POINT`
 };
+
 
 export const UpdateType = {
   POINT: `POINT`,
@@ -33,6 +37,7 @@ export const MenuItem = {
   TABLE: `TABLE`,
   STATS: `STATS`
 };
+
 
 export const ICONS = new Map([
   [`bus`, `🚌`],

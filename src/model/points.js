@@ -1,19 +1,23 @@
 import Observer from '../utils/observer';
 
-export default class Points extends Observer {
+
+export default class PointsModel extends Observer {
   constructor() {
     super();
     this._points = [];
   }
+
 
   setPoints(updateType, points) {
     this._points = [...points];
     this._notify(updateType);
   }
 
+
   getPoints() {
     return this._points;
   }
+
 
   updatePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
@@ -31,6 +35,7 @@ export default class Points extends Observer {
     this._notify(updateType, update);
   }
 
+
   addPoint(updateType, update) {
     this._points = [
       update,
@@ -39,6 +44,7 @@ export default class Points extends Observer {
 
     this._notify(updateType, update);
   }
+
 
   deletePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
@@ -54,6 +60,7 @@ export default class Points extends Observer {
 
     this._notify(updateType);
   }
+
 
   static adaptToClient(point) {
     const adaptedPoint = Object.assign({}, point,
@@ -72,6 +79,7 @@ export default class Points extends Observer {
 
     return adaptedPoint;
   }
+
 
   static adaptToServer(point) {
     const adaptedPoint = Object.assign(
@@ -93,4 +101,3 @@ export default class Points extends Observer {
     return adaptedPoint;
   }
 }
-

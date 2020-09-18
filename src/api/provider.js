@@ -1,10 +1,12 @@
 import {nanoid} from 'nanoid';
 import PointsModel from '../model/points';
 
+
 const getSyncedPoints = (points) => {
   return points.filter(({success}) => success)
     .map(({payload}) => payload.point);
 };
+
 
 const createPointsStructureForStore = (items) => {
   return items.reduce((acc, current) => {
@@ -12,11 +14,13 @@ const createPointsStructureForStore = (items) => {
   }, {});
 };
 
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
   }
+
 
   getPoints() {
     if (this._isOnline()) {
@@ -31,6 +35,7 @@ export default class Provider {
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
 
+
   getDestinations() {
     if (this._isOnline()) {
       return this._api.getDestinations()
@@ -42,6 +47,7 @@ export default class Provider {
     const storeDestinations = this._store.getData().destinations;
     return Promise.resolve(storeDestinations);
   }
+
 
   getOffers() {
     if (this._isOnline()) {
@@ -69,6 +75,7 @@ export default class Provider {
     return Promise.resolve(point);
   }
 
+
   addPoint(point) {
     if (this._isOnline()) {
       return this._api.addPoint(point)
@@ -93,6 +100,7 @@ export default class Provider {
     return Promise.resolve();
   }
 
+
   sync() {
     if (this._isOnline()) {
       const storePoints = Object.values((this._store.getData()).points);
@@ -105,6 +113,7 @@ export default class Provider {
     }
     return Promise.reject(new Error(`Sync data failed`));
   }
+
 
   _isOnline() {
     return window.navigator.onLine;

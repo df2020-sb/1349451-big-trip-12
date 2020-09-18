@@ -56,6 +56,7 @@ const options = {
   }
 };
 
+
 const moneyPerPointType = (points) => {
   let result = points.reduce((acc, point) => {
     acc[point.type] = (acc[point.type] || 0) + point.price;
@@ -64,6 +65,7 @@ const moneyPerPointType = (points) => {
   result = Object.fromEntries(Object.entries(result).sort((a, b) => b[1] - a[1]));
   return result;
 };
+
 
 const ridesPerTransferType = (points) => {
 
@@ -77,6 +79,7 @@ const ridesPerTransferType = (points) => {
   return result;
 };
 
+
 const timePerPointType = (points) => {
 
   let result = points.reduce((acc, point) => {
@@ -86,6 +89,7 @@ const timePerPointType = (points) => {
   result = Object.fromEntries(Object.entries(result).sort((a, b) => b[1] - a[1]));
   return result;
 };
+
 
 const renderMoneyChart = (moneyCtx, points) => {
   const data = moneyPerPointType(points);
@@ -204,6 +208,7 @@ const renderTimeChart = (timeCtx, points) => {
   });
 };
 
+
 const createStatisticsTemplate = () => {
 
   return `<section class="statistics">
@@ -223,6 +228,7 @@ const createStatisticsTemplate = () => {
         </section>`;
 };
 
+
 export default class Statistics extends SmartView {
   constructor(points) {
     super();
@@ -235,6 +241,7 @@ export default class Statistics extends SmartView {
     this._setCharts();
   }
 
+
   removeElement() {
     super.removeElement();
     if (this._moneyChart || this._transportChart || this._timeChart) {
@@ -244,13 +251,16 @@ export default class Statistics extends SmartView {
     }
   }
 
-  _getTemplate() {
-    return createStatisticsTemplate();
-  }
 
   restoreHandlers() {
     this._setCharts();
   }
+
+
+  _getTemplate() {
+    return createStatisticsTemplate();
+  }
+
 
   _setCharts() {
 

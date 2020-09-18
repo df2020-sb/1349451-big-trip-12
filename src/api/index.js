@@ -1,5 +1,6 @@
 import PointsModel from '../model/points';
 
+
 const Method = {
   GET: `GET`,
   PUT: `PUT`,
@@ -20,6 +21,7 @@ export default class Api {
     this._authorization = authorization;
   }
 
+
   getPoints() {
     return this._load({
       url: `points`,
@@ -28,15 +30,18 @@ export default class Api {
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
+
   getOffers() {
     return this._load({url: `offers`})
       .then(Api.toJSON);
   }
 
+
   getDestinations() {
     return this._load({url: `destinations`})
       .then(Api.toJSON);
   }
+
 
   updatePoint(point) {
     return this._load({
@@ -49,6 +54,7 @@ export default class Api {
       .then(PointsModel.adaptToClient);
   }
 
+
   addPoint(point) {
     return this._load({
       url: `points`,
@@ -60,12 +66,25 @@ export default class Api {
       .then(PointsModel.adaptToClient);
   }
 
+
   deletePoint(point) {
     return this._load({
       url: `points/${point.id}`,
       method: Method.DELETE
     });
   }
+
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
 
   _load({
     url,
@@ -78,16 +97,6 @@ export default class Api {
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(Api.checkStatus)
       .catch(Api.catchError);
-  }
-
-  sync(data) {
-    return this._load({
-      url: `points/sync`,
-      method: Method.POST,
-      body: JSON.stringify(data),
-      headers: new Headers({"Content-Type": `application/json`})
-    })
-      .then(Api.toJSON);
   }
 
 

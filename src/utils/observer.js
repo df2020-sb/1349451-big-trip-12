@@ -3,13 +3,16 @@ export default class Observer {
     this._observers = [];
   }
 
+
   addObserver(observer) {
     this._observers.push(observer);
   }
 
+
   removeObserver(observer) {
     this._observers = this._observers.filter((existedObserver) => existedObserver !== observer);
   }
+
 
   _notify(event, payload) {
     if (event) {
@@ -17,6 +20,5 @@ export default class Observer {
     } else {
       this._observers[this._observers.length - 1]();
     }
-
   }
 }

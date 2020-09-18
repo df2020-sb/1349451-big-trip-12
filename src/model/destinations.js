@@ -1,18 +1,16 @@
 import Observer from '../utils/observer';
 
-export default class Destinations extends Observer {
+
+export default class DestinationsModel extends Observer {
   constructor() {
     super();
     this._destinations = [];
     this._currentDestination = {};
   }
 
+
   setDestinations(destinations) {
     this._destinations = destinations;
-  }
-
-  _getAllCities() {
-    return this._destinations.map((destination) => destination.name);
   }
 
 
@@ -21,11 +19,13 @@ export default class Destinations extends Observer {
     this._notify();
   }
 
+
   getCurrentDestination() {
     return this._currentDestination;
   }
 
-  getAllDestinations() {
-    return this._destinations;
+
+  _getAllCities() {
+    return this._destinations.map((destination) => destination.name);
   }
 }

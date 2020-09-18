@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 
+
 const createFilter = (filter, currentFilterType) => {
   const {type, isUsed} = filter;
   return (
@@ -9,6 +10,7 @@ const createFilter = (filter, currentFilterType) => {
       </div>`
   );
 };
+
 
 const createFiltersTemplate = (filters, currentFilterType) => {
   const filtersTemplate = filters
@@ -24,12 +26,19 @@ const createFiltersTemplate = (filters, currentFilterType) => {
   );
 };
 
+
 export default class Filter extends AbstractView {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
     this._currentFilter = currentFilterType;
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+  }
+
+
+  setTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().querySelector(`form`).addEventListener(`click`, this._typeChangeHandler);
   }
 
 
@@ -37,14 +46,10 @@ export default class Filter extends AbstractView {
     return createFiltersTemplate(this._filters, this._currentFilter);
   }
 
-  _filterTypeChangeHandler(evt) {
+
+  _typeChangeHandler(evt) {
     if (evt.target.tagName === `INPUT`) {
       this._callback.filterTypeChange(evt.target.value);
     }
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().querySelector(`form`).addEventListener(`click`, this._filterTypeChangeHandler);
   }
 }
