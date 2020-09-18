@@ -14,11 +14,6 @@ export default class AbstractView {
   }
 
 
-  _getTemplate() {
-    throw new Error(`Abstract method not implemented: getTemplate`);
-  }
-
-
   getElement() {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
@@ -38,5 +33,10 @@ export default class AbstractView {
       this.getElement().classList.remove(`shake`);
       callback();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+
+  _getTemplate() {
+    throw new Error(`Abstract method not implemented: getTemplate`);
   }
 }

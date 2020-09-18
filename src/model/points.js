@@ -1,7 +1,7 @@
 import Observer from '../utils/observer';
 
 
-export default class Points extends Observer {
+export default class PointsModel extends Observer {
   constructor() {
     super();
     this._points = [];
@@ -101,4 +101,3 @@ export default class Points extends Observer {
     return adaptedPoint;
   }
 }
-

@@ -4,20 +4,8 @@ import moment from 'moment';
 import {POINT_TYPES} from '../const';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-
 let currentOffer = {};
 let currentDestination = {};
-
-
-export const renderOffer = (offer) => {
-  currentOffer = offer;
-};
-
-
-export const renderDestination = (destination) => {
-  currentDestination = destination;
-};
-
 
 const createTypeList = (pointTypes, currentType) => {
   return pointTypes.map((pointType) => {
@@ -234,10 +222,92 @@ export default class PointEdit extends SmartView {
     this._setOffersChangeHandler();
   }
 
+
+  restoreHandlers() {
+    if (this.getElement().querySelector(`.event__rollup-btn`)) {
+      this.setCloseEditClickHandler(this._callback.editFormClose);
+    }
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this._setFavoriteClickHandler();
+    this._setTypeChangeHandler();
+    this._setDestinationChangeHandler();
+    this._setPriceChangeHandler();
+    this._setOffersChangeHandler();
+    this.setDatepickers();
+    this.setSubmitHandler(this._callback.submit);
+  }
+
+
+  reset(point) {
+    this.updateData(Object.assign(PointEdit.parsePointToData(point), {isFavorite: this._data.isFavorite}));
+  }
+
+
+  removeElement() {
+    super.removeElement();
+    this.destroyPicker(this._startDatepicker);
+    this.destroyPicker(this._endDatepicker);
+  }
+
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._submitHandler);
+  }
+
+
+  setCloseEditClickHandler(callback) {
+    this._callback.editFormClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+  }
+
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
+  }
+
+
+  setDatepickers() {
+    this.destroyPicker(this._startDatepicker);
+    this.destroyPicker(this._endDatepicker);
+
+    this._startDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d / m / Y H: i`,
+          defaultDate: this._data.startDate,
+          onChange: this._startDateChangeHandler
+        }
+    );
+
+    this._endDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d / m / Y H: i`,
+          defaultDate: this._data.endDate,
+          minDate: this._data.startDate,
+          onChange: this._endDateChangeHandler
+        }
+    );
+  }
+
+
+  destroyPicker(datepicker) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+  }
+
+
   _getTemplate() {
     this._updateOffers(this._data.type);
     return createPointEditTemplate(this._data, this._allCities, currentOffer, this._isNewPoint);
   }
+
 
   _submitHandler(evt) {
     evt.preventDefault();
@@ -250,12 +320,6 @@ export default class PointEdit extends SmartView {
     this.destroyPicker(this._startDatepicker);
     this.destroyPicker(this._endDatepicker);
     this._callback.submit(this._data);
-  }
-
-
-  setSubmitHandler(callback) {
-    this._callback.submit = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._submitHandler);
   }
 
 
@@ -288,9 +352,11 @@ export default class PointEdit extends SmartView {
     }
   }
 
+
   _setDestinationChangeHandler() {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
   }
+
 
   _offersChangeHandler(evt) {
     if (evt.target.tagName === `INPUT`) {
@@ -307,31 +373,24 @@ export default class PointEdit extends SmartView {
     }
   }
 
+
   _setOffersChangeHandler() {
     if (currentOffer && currentOffer.offers.length) {
       this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersChangeHandler);
     }
   }
 
+
   _closeEditClickHandler() {
     this._callback.editFormClose();
   }
 
-
-  setCloseEditClickHandler(callback) {
-    this._callback.editFormClose = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
-  }
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(PointEdit.parseDataToPoint(this._data));
   }
 
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
-  }
 
   _startDateChangeHandler(selectedDates) {
     this.updateData({
@@ -345,45 +404,13 @@ export default class PointEdit extends SmartView {
     }
   }
 
+
   _endDateChangeHandler(selectedDates) {
     this.updateData({
       endDate: selectedDates[0],
     });
   }
 
-
-  setDatepickers() {
-    this.destroyPicker(this._startDatepicker);
-    this.destroyPicker(this._endDatepicker);
-
-    this._startDatepicker = flatpickr(this.getElement()
-      .querySelector(`#event-start-time-1`),
-    {
-      enableTime: true,
-      dateFormat: `d / m / Y H: i`,
-      defaultDate: this._data.startDate,
-      onChange: this._startDateChangeHandler
-    }
-    );
-
-    this._endDatepicker = flatpickr(this.getElement()
-      .querySelector(`#event-end-time-1`),
-    {
-      enableTime: true,
-      dateFormat: `d / m / Y H: i`,
-      defaultDate: this._data.endDate,
-      minDate: this._data.startDate,
-      onChange: this._endDateChangeHandler
-    }
-    );
-  }
-
-  destroyPicker(datepicker) {
-    if (datepicker) {
-      datepicker.destroy();
-      datepicker = null;
-    }
-  }
 
   _priceChangeHandler(evt) {
     this.updateData({price: Number(evt.target.value)});
@@ -392,32 +419,6 @@ export default class PointEdit extends SmartView {
 
   _setPriceChangeHandler() {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
-  }
-
-
-  restoreHandlers() {
-
-    if (this.getElement().querySelector(`.event__rollup-btn`)) {
-      this.setCloseEditClickHandler(this._callback.editFormClose);
-    }
-    this.setDeleteClickHandler(this._callback.deleteClick);
-    this._setFavoriteClickHandler();
-    this._setTypeChangeHandler();
-    this._setDestinationChangeHandler();
-    this._setPriceChangeHandler();
-    this._setOffersChangeHandler();
-    this.setDatepickers();
-    this.setSubmitHandler(this._callback.submit);
-  }
-
-  reset(point) {
-    this.updateData(Object.assign(PointEdit.parsePointToData(point), {isFavorite: this._data.isFavorite}));
-  }
-
-  removeElement() {
-    super.removeElement();
-    this.destroyPicker(this._startDatepicker);
-    this.destroyPicker(this._endDatepicker);
   }
 
 
@@ -431,6 +432,7 @@ export default class PointEdit extends SmartView {
     );
   }
 
+
   static parseDataToPoint(data) {
     data = Object.assign({}, data);
 
@@ -441,3 +443,13 @@ export default class PointEdit extends SmartView {
     return data;
   }
 }
+
+
+export const renderOffer = (offer) => {
+  currentOffer = offer;
+};
+
+
+export const renderDestination = (destination) => {
+  currentDestination = destination;
+};

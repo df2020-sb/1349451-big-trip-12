@@ -13,12 +13,14 @@ const createDayTemplate = (date, index) => {
     </li>`);
 };
 
+
 export default class Day extends AbstractView {
   constructor(date, index) {
     super();
     this._date = date;
     this._index = index;
   }
+
 
   _getTemplate() {
     return createDayTemplate(this._date, this._index);

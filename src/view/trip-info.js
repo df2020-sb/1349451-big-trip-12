@@ -1,6 +1,7 @@
 import AbstractView from './abstract';
 import moment from 'moment';
 
+
 const createTripInfoTemplate = (points) => {
   const tripStartDate = points.length ? points[0].startDate : null;
   const tripEndDate = points.length ? points[points.length - 1].endDate : null;
@@ -12,6 +13,7 @@ const createTripInfoTemplate = (points) => {
       : `${moment(tripEndDate).format(`DD`)}`;
   }
 
+
   const getOffersPrice = (point) => {
     let total = 0;
     if (point.offers.length) {
@@ -21,9 +23,8 @@ const createTripInfoTemplate = (points) => {
     return total;
   };
 
-  const totalPrice = points.reduce((pointsTotal, point) =>
-    pointsTotal + Number(point.price) + getOffersPrice(point), 0);
 
+  const totalPrice = points.reduce((pointsTotal, point) => pointsTotal + Number(point.price) + getOffersPrice(point), 0);
   const cities = points.map((point) => point.destination.name);
   const lastCity = cities.pop();
 

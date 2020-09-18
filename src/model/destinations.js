@@ -1,7 +1,7 @@
 import Observer from '../utils/observer';
 
 
-export default class Destinations extends Observer {
+export default class DestinationsModel extends Observer {
   constructor() {
     super();
     this._destinations = [];
@@ -24,10 +24,6 @@ export default class Destinations extends Observer {
     return this._currentDestination;
   }
 
-
-  getAllDestinations() {
-    return this._destinations;
-  }
 
   _getAllCities() {
     return this._destinations.map((destination) => destination.name);

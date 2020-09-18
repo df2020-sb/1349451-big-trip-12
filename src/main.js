@@ -42,6 +42,20 @@ const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
 
 
+const renderTripInfo = (points) => {
+  const prevTripInfoComponent = tripInfoComponent;
+  tripInfoComponent = new TripInfo(points);
+
+  if (!prevTripInfoComponent) {
+    render(header, tripInfoComponent, RenderPosition.AFTERBEGIN);
+    return;
+  }
+
+  replace(tripInfoComponent, prevTripInfoComponent);
+  remove(prevTripInfoComponent);
+};
+
+
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
@@ -60,35 +74,35 @@ const handleMenuClick = (menuItem) => {
 };
 
 
-const renderTripInfo = (points) => {
-  const prevTripInfoComponent = tripInfoComponent;
-  tripInfoComponent = new TripInfo(points);
-
-  if (!prevTripInfoComponent) {
-    render(header, tripInfoComponent, RenderPosition.AFTERBEGIN);
-    return;
-  }
-
-  replace(tripInfoComponent, prevTripInfoComponent);
-  remove(prevTripInfoComponent);
-};
+const tripPresenter = new TripPresenter(
+    tripContainer,
+    pointsModel,
+    filterModel,
+    destinationsModel,
+    offersModel,
+    renderTripInfo,
+    apiWithProvider
+);
 
 
-const tripPresenter = new TripPresenter(tripContainer, pointsModel, filterModel, destinationsModel, offersModel, renderTripInfo, apiWithProvider);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 
+
 render(main, tripContainer, RenderPosition.BEFOREEND);
+
 
 addButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   if (statsComponent) {
-    menu.resetMenu();
+    menu.reset();
   }
   tripPresenter.createNewPoint();
 });
 
+
 tripPresenter.init();
 filterPresenter.init();
+
 
 Promise.all([
   apiWithProvider.getPoints(),
@@ -99,23 +113,26 @@ Promise.all([
   offersModel.setOffers(offers);
   pointsModel.setPoints(UpdateType.INIT, points);
   render(controls, menu, RenderPosition.AFTERBEGIN);
-  menu.setMenuClickHandler(handleMenuClick);
+  menu.setClickHandler(handleMenuClick);
   addButton.disabled = false;
 }).catch(() => {
   pointsModel.setPoints(UpdateType.INIT, []);
   render(controls, menu, RenderPosition.AFTERBEGIN);
-  menu.setMenuClickHandler(handleMenuClick);
+  menu.setClickHandler(handleMenuClick);
   addButton.disabled = true;
 });
+
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
 });
 
+
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
   apiWithProvider.sync();
 });
+
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;

@@ -42,13 +42,13 @@ export default class PointNew {
     this._destinationsModel.addObserver(this._handleDestinationsModelUpdate);
   }
 
-  init() {
 
+  init() {
     if (this._pointEditComponent) {
       return;
     }
     addButton.disabled = true;
-    this._availableOffers = this._offersModel.getOffer();
+
     const allCities = this._destinationsModel._getAllCities() || [];
     this._pointEditComponent = new PointEdit(EMPTY_POINT, allCities, this._handleOffersChange, this._handleDestinationChange, true);
     this._pointEditComponent.setSubmitHandler(this._handleSubmit);
@@ -57,6 +57,7 @@ export default class PointNew {
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._pointEditComponent.setDatepickers();
   }
+
 
   destroy() {
     if (!this._pointEditComponent) {
@@ -71,12 +72,14 @@ export default class PointNew {
     addButton.disabled = false;
   }
 
+
   setToSaving() {
     this._pointEditComponent.updateData({
       isDisabled: true,
       isSaving: true
     });
   }
+
 
   setToError() {
     const resetFormState = () => {
@@ -89,6 +92,7 @@ export default class PointNew {
     this._pointEditComponent.shake(resetFormState);
   }
 
+
   _handleSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
@@ -96,9 +100,11 @@ export default class PointNew {
         point);
   }
 
+
   _handleDeleteClick() {
     this.destroy();
   }
+
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
@@ -106,18 +112,23 @@ export default class PointNew {
       this.destroy();
     }
   }
+
+
   _handleOffersChange(type) {
     this._offersModel.setCurrentOffer(type);
   }
+
 
   _handleOffersModelUpdate() {
     this._currentOffer = this._offersModel.getOffer();
     renderOffer(this._currentOffer);
   }
 
+
   _handleDestinationChange(city) {
     this._destinationsModel.setCurrentDestination(city);
   }
+
 
   _handleDestinationsModelUpdate() {
     this._currentDestination = this._destinationsModel.getCurrentDestination();

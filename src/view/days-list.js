@@ -7,6 +7,7 @@ const createDaysListTemplate = () => {
   );
 };
 
+
 export default class DaysList extends AbstractView {
   _getTemplate() {
     return createDaysListTemplate();

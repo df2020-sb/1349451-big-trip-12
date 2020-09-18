@@ -8,7 +8,6 @@ const createPointTemplate = (point) => {
   const {type, destination, price, startDate, endDate, offers} = point;
 
   const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
-
   const formattedStartDate = moment(startDate).format(`YYYY-MM-DD`);
   const formattedStartTime = moment(startDate).format(`HH:mm`);
   const formattedEndtDate = moment(endDate).format(`YYYY-MM-DD`);
@@ -16,11 +15,11 @@ const createPointTemplate = (point) => {
 
   const duration = moment.duration(endDate - startDate);
   const days = duration.days();
-  const daysString = days > 0 ? `${(`0` + days.toString()).slice(-2)}D ` : ``;
+  const daysString = days > 0 ? `${`0${days.toString()}`.slice(-2)}D ` : ``;
   const hours = duration.hours();
-  const hoursString = hours > 0 ? `${(`0` + hours.toString()).slice(-2)}H ` : ``;
+  const hoursString = hours > 0 ? `${`0${hours.toString()}`.slice(-2)}H ` : ``;
   const minutes = duration.minutes();
-  const minutesString = minutes > 0 ? `${(`0` + minutes.toString()).slice(-2)}M` : ``;
+  const minutesString = minutes > 0 ? `${`0${days.toString()}`.slice(-2)}M` : ``;
 
   const createOffersList = (pointOffers) => {
     return pointOffers.slice(0, 3).map((offer) =>
@@ -73,17 +72,20 @@ export default class Point extends AbstractView {
     this._editControlClickHandler = this._editControlClickHandler.bind(this);
   }
 
-  _getTemplate() {
-    return createPointTemplate(this._point);
-  }
-
-  _editControlClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.editClick();
-  }
 
   setEditControlClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editControlClickHandler);
+  }
+
+
+  _getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+
+  _editControlClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }
