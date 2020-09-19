@@ -7,19 +7,19 @@ const createPointTemplate = (point) => {
 
   const {type, destination, price, startDate, endDate, offers} = point;
 
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
+  const pointTypeValue = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
   const formattedStartDate = moment(startDate).format(`YYYY-MM-DD`);
   const formattedStartTime = moment(startDate).format(`HH:mm`);
   const formattedEndtDate = moment(endDate).format(`YYYY-MM-DD`);
   const formattedEndTime = moment(endDate).format(`HH:mm`);
 
   const duration = moment.duration(endDate - startDate);
-  const days = duration.days();
-  const daysString = days > 0 ? `${`0${days.toString()}`.slice(-2)}D ` : ``;
-  const hours = duration.hours();
-  const hoursString = hours > 0 ? `${`0${hours.toString()}`.slice(-2)}H ` : ``;
-  const minutes = duration.minutes();
-  const minutesString = minutes > 0 ? `${`0${days.toString()}`.slice(-2)}M` : ``;
+  const durationDays = duration.days();
+  const daysValue = durationDays > 0 ? `${`0${durationDays.toString()}`.slice(-2)}D ` : ``;
+  const durationHours = duration.hours();
+  const hoursValue = durationHours > 0 ? `${`0${durationHours.toString()}`.slice(-2)}H ` : ``;
+  const durationMinutes = duration.minutes();
+  const minutesValue = durationMinutes > 0 ? `${`0${durationMinutes.toString()}`.slice(-2)}M` : ``;
 
   const createOffersList = (pointOffers) => {
     return pointOffers.slice(0, 3).map((offer) =>
@@ -35,7 +35,7 @@ const createPointTemplate = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${pointTypeString} ${destination.name}</h3>
+      <h3 class="event__title">${pointTypeValue} ${destination.name}</h3>
 
       <div class="event__schedule">
         <p class="event__time">
@@ -43,7 +43,7 @@ const createPointTemplate = (point) => {
           &mdash;
           <time class="event__end-time" datetime="${formattedEndtDate}T${formattedEndTime}">${formattedEndTime}</time>
         </p>
-        <p class="event__duration">${daysString}${hoursString}${minutesString}</p>
+        <p class="event__duration">${daysValue}${hoursValue}${minutesValue}</p>
       </div >
 
   <p class="event__price">

@@ -46,16 +46,16 @@ const createCitiesList = (cities) => {
 };
 
 
-const createCityTemplate = (city, citiesArray, type, isDisabled) => {
-  const pointTypeString = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
+const createCityTemplate = (city, cities, type, isDisabled) => {
+  const pointTypeValue = POINT_TYPES.activities.includes(type) ? `${type} in ` : `${type} to`;
   return (
     `<div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
-        ${pointTypeString}
+        ${pointTypeValue}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city ? city : ``}" list="destination-list-1" pattern="${citiesArray.join(`|`)}" ${isDisabled ? `disabled` : ``}>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city ? city : ``}" list="destination-list-1" pattern="${cities.join(`|`)}" ${isDisabled ? `disabled` : ``}>
     <datalist id="destination-list-1">
-      ${createCitiesList(citiesArray)}
+      ${createCitiesList(cities)}
     </datalist>
   </div>`
   );
@@ -115,8 +115,8 @@ const createOffersTemplate = (pointOffers, typeOffer = {}) => {
 };
 
 
-const createPhotosTemplate = (photosArray = []) => {
-  return photosArray.map((photo) => `<img class="event__photo" src = "${photo.src}" alt = "${photo.description}">`).join(``);
+const createPhotosTemplate = (photos = []) => {
+  return photos.map((photo) => `<img class="event__photo" src = "${photo.src}" alt = "${photo.description}">`).join(``);
 };
 
 
@@ -236,7 +236,6 @@ export default class PointEdit extends SmartView {
     this.setDatepickers();
     this.setSubmitHandler(this._callback.submit);
   }
-
 
   reset(point) {
     this.updateData(Object.assign(PointEdit.parsePointToData(point), {isFavorite: this._data.isFavorite}));

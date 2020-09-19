@@ -19,7 +19,7 @@ const createDay = () => {
 };
 
 const createDaysArray = (points) => {
-  const daysArray = [];
+  const days = [];
   let newDay = createDay();
   let currentDay = points[0].startDate.getDate();
   let prevDate = points[0].startDate;
@@ -27,7 +27,7 @@ const createDaysArray = (points) => {
   points.forEach((point) => {
     if (point.startDate.getDate() !== currentDay) {
       newDay.date = prevDate;
-      daysArray.push(newDay);
+      days.push(newDay);
       newDay = createDay();
       currentDay = point.startDate.getDate();
       prevDate = point.startDate;
@@ -36,8 +36,8 @@ const createDaysArray = (points) => {
   });
 
   newDay.date = prevDate;
-  daysArray.push(newDay);
-  return daysArray;
+  days.push(newDay);
+  return days;
 };
 
 export default class Trip {
@@ -52,7 +52,7 @@ export default class Trip {
     this._changeTripInfo = changeTripInfo;
     this._api = api;
 
-    this._daysArray = [];
+    this._days = [];
     this._renderedDays = [];
     this._pointPresenter = {};
     this._pointNewPresenter = {};
@@ -182,10 +182,10 @@ export default class Trip {
       return;
     }
 
-    this._daysArray = createDaysArray(points);
-    let dayNumber = 0;
-    this._daysArray.forEach((day) => {
-      this._renderDay(day.points, day.date, ++dayNumber);
+    this._days = createDaysArray(points);
+    let dayCount = 0;
+    this._days.forEach((day) => {
+      this._renderDay(day.points, day.date, ++dayCount);
     });
   }
 

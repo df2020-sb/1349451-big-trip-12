@@ -5,10 +5,10 @@ import moment from 'moment';
 const createTripInfoTemplate = (points) => {
   const tripStartDate = points.length ? points[0].startDate : null;
   const tripEndDate = points.length ? points[points.length - 1].endDate : null;
-  let tripStartDateString = tripStartDate ? moment(tripStartDate).format(`MMM DD`) : ``;
-  let tripEndDateString = ``;
+  let tripStartDateValue = tripStartDate ? moment(tripStartDate).format(`MMM DD`) : ``;
+  let tripEndDateValue = ``;
   if (tripStartDate && tripEndDate) {
-    tripEndDateString = tripStartDate.getMonth() !== tripEndDate.getMonth()
+    tripEndDateValue = tripStartDate.getMonth() !== tripEndDate.getMonth()
       ? moment(tripEndDate).format(`MMM DD`)
       : `${moment(tripEndDate).format(`DD`)}`;
   }
@@ -51,7 +51,7 @@ const createTripInfoTemplate = (points) => {
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${cities[0] || ``}  ${getMiddleCities()} ${lastCity || ``}</h1>
-        <p class="trip-info__dates">${tripStartDateString}&nbsp;&mdash;&nbsp;${tripEndDateString}</p>
+        <p class="trip-info__dates">${tripStartDateValue}&nbsp;&mdash;&nbsp;${tripEndDateValue}</p>
       </div>
       <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>

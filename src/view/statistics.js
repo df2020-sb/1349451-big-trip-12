@@ -4,11 +4,7 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 
-const BarHeight = {
-  MONEY: 330,
-  TRANSPORT: 220,
-  TIME: 220,
-};
+const BAR_HEIGHT = 330;
 
 const FontSize = {
   LABEL: 13,
@@ -34,7 +30,6 @@ const options = {
         display: false,
         drawBorder: false
       },
-      barThickness: BAR_THICKNESS,
     }],
     xAxes: [{
       ticks: {
@@ -45,7 +40,6 @@ const options = {
         display: false,
         drawBorder: false
       },
-      minBarLength: MIN_BAR_LENGTH
     }],
   },
   legend: {
@@ -93,7 +87,6 @@ const timePerPointType = (points) => {
 
 const renderMoneyChart = (moneyCtx, points) => {
   const data = moneyPerPointType(points);
-
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -103,30 +96,33 @@ const renderMoneyChart = (moneyCtx, points) => {
         data: Object.values(data),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH
       }]
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: FontSize.LABEL
+    options: Object.assign({},
+        options,
+        {
+          plugins: {
+            datalabels: {
+              font: {
+                size: FontSize.LABEL
+              },
+              color: `#000000`,
+              anchor: `end`,
+              align: `start`,
+              formatter: (val) => `€${val}`
+            }
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `€${val}`
-        }
-      },
-      title: {
-        display: true,
-        text: `MONEY`,
-        fontColor: `#000000`,
-        fontSize: FontSize.TITLE,
-        position: `left`
-      },
-      ...options
-    }
+          title: {
+            display: true,
+            text: `MONEY`,
+            fontColor: `#000000`,
+            fontSize: FontSize.TITLE,
+            position: `left`
+          },
+        })
   });
 };
 
@@ -142,30 +138,33 @@ const renderTransportChart = (transportCtx, points) => {
         data: Object.values(data),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH
       }]
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: FontSize.LABEL
+    options: Object.assign({},
+        options,
+        {
+          plugins: {
+            datalabels: {
+              font: {
+                size: FontSize.LABEL
+              },
+              color: `#000000`,
+              anchor: `end`,
+              align: `start`,
+              formatter: (val) => `${val}x`
+            }
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `${val}x`
-        }
-      },
-      title: {
-        display: true,
-        text: `TRANSPORT`,
-        fontColor: `#000000`,
-        fontSize: FontSize.TITLE,
-        position: `left`
-      },
-      ...options
-    }
+          title: {
+            display: true,
+            text: `TRANSPORT`,
+            fontColor: `#000000`,
+            fontSize: FontSize.TITLE,
+            position: `left`
+          },
+        })
   });
 };
 
@@ -181,30 +180,33 @@ const renderTimeChart = (timeCtx, points) => {
         data: Object.values(data).map((value) => Math.round(value)),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH
       }]
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: FontSize.LABEL
+    options: Object.assign({},
+        options,
+        {
+          plugins: {
+            datalabels: {
+              font: {
+                size: FontSize.LABEL
+              },
+              color: `#000000`,
+              anchor: `end`,
+              align: `start`,
+              formatter: (val) => `${val}H`
+            }
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `${val} H`
-        }
-      },
-      title: {
-        display: true,
-        text: `TIME SPENT`,
-        fontColor: `#000000`,
-        fontSize: FontSize.TITLE,
-        position: `left`
-      },
-      ...options
-    }
+          title: {
+            display: true,
+            text: `TIME SPENT`,
+            fontColor: `#000000`,
+            fontSize: FontSize.TITLE,
+            position: `left`
+          },
+        })
   });
 };
 
@@ -271,13 +273,13 @@ export default class Statistics extends SmartView {
     }
 
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
-    moneyCtx.height = BarHeight.MONEY;
+    moneyCtx.height = BAR_HEIGHT;
 
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
-    transportCtx.height = BarHeight.TRANSPORT;
+    transportCtx.height = BAR_HEIGHT;
 
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
-    timeSpendCtx.height = BarHeight.TIME;
+    timeSpendCtx.height = BAR_HEIGHT;
 
     this._moneyChart = renderMoneyChart(moneyCtx, this._points);
     this._transportChart = renderTransportChart(transportCtx, this._points);
