@@ -362,9 +362,9 @@ export default class PointEdit extends SmartView {
       this._data.offers = [];
       const selectedOffers = this.getElement().querySelectorAll(`.event__offer-checkbox:checked`);
       selectedOffers.forEach((offer) => {
-        let title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
+        const title = offer.parentElement.querySelector(`.event__offer-title`).textContent;
         this._updateOffers(this._data.type);
-        let newOffer = currentOffer.offers.find((item) => item.title === title);
+        const newOffer = currentOffer.offers.find((item) => item.title === title);
         this._data.offers.push(newOffer);
       });
 

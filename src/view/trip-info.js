@@ -5,7 +5,7 @@ import moment from 'moment';
 const createTripInfoTemplate = (points) => {
   const tripStartDate = points.length ? points[0].startDate : null;
   const tripEndDate = points.length ? points[points.length - 1].endDate : null;
-  let tripStartDateValue = tripStartDate ? moment(tripStartDate).format(`MMM DD`) : ``;
+  const tripStartDateValue = tripStartDate ? moment(tripStartDate).format(`MMM DD`) : ``;
   let tripEndDateValue = ``;
   if (tripStartDate && tripEndDate) {
     tripEndDateValue = tripStartDate.getMonth() !== tripEndDate.getMonth()
